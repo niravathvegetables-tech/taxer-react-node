@@ -10,36 +10,63 @@ interface FormData {
   companyAddress: string;
   companyTrn: string;
   companyAmount: string;
+  companyID: string;
 
 }
 
 interface Company {
-  company_id: number;
+  company_id: string;
   company_name: string;
   company_address: string;
   company_trn: string;
   company_data: string;
   tax_id: number;
   company_amount: string;
+  showinfo: boolean;
+    submitval:string;
 }
 
 const App: React.FC = () => {
+
   const [formData, setFormData] = useState<FormData>({
     companyName: "",
     companyAddress: "",
     companyTrn: "",
-    companyAmount: ""
+    companyAmount: "",
+    companyID: ""
   });
 
   const [company, setCompany] = useState<Company[]>([]);
 
       const [loading, setLoading] = useState(true);
      const [error, setError] = useState<string | null>(null);
+  const [showinfo, setShowinfo] = useState<boolean>(true);
+
+  const[submitval,setSubmitbtnval]=useState<string>('Submit');
+
+  
+     
 
 useEffect(() => {
   fetchCompany();
+
+  
+
 }, []); 
 
+
+  function handleEdit(com: Company) {
+  
+    setFormData({
+      companyID:      com.company_id,
+      companyName:    com.company_name,
+      companyTrn:     com.company_trn,
+      companyAmount:  com.company_amount,
+      companyAddress: com.company_address,
+   
+    });
+     
+  }
 
 
      function fetchCompany() {
@@ -49,12 +76,27 @@ useEffect(() => {
       setCompany(data.length > 0 ? data : []);
       console.log('Company data:', data);
       setLoading(false);
+      setShowinfo(false);
+      handleEdit(data[0]);
     })
     .catch(() => {
       setError('Failed to connect to server');
       setLoading(false);
+       setShowinfo(true);
     });
 }
+
+const setShowEdit=()=>{ 
+  if(showinfo){
+    setShowinfo(false);
+  }else{
+
+     setShowinfo(true);
+  setSubmitbtnval('Edit');
+  }
+ 
+
+};
 
   // Generic handler for input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,15 +109,22 @@ useEffect(() => {
 
    const handleSubmit = async () => {
     
+try{
 
-     const response = await fetch(url+"company", {
+  const response = await fetch(url+"company", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData)
   });
 
-     const result = await response.json();
+     const result = await response.json().then( () => fetchCompany()  );
   console.log("Server response:", result);
+
+}catch(err){
+
+
+}
+     
 
   };
 
@@ -85,44 +134,22 @@ useEffect(() => {
         <Header />
       </div>
 
-     
+      {showinfo ? (
 
-
-
-
-
-
-
-    <div className='company mobwidth'>
-        {company.length > 0 ? (
-          company.map((com) => (
-            <div className='tab-home' key={com.company_name}>
-              <h2>
-               {com.company_name || ""}  
-              </h2>
-              <p>
-                Address: {com.company_address || ""}  
-              </p>
-              <p>
-                TRN:  {String(com.company_trn || "")}
-              </p>
-              <p>
-                Amount:  {String(com.company_amount || "")} 
-              </p>
-              
-
-               
-            </div>
-          ))
-        ) : (
-           
-          
-
-
-           <div className="taxapp-body">
+    <div className="taxapp-body">
         <h1>Welcome to Taxer</h1>
 
         <div className="taxapp-body-inputs">
+
+           <input
+            type="text"
+            name="companyID"
+            className="companyinputs"
+            placeholder="Company ID"
+            value={formData.companyID}
+            onChange={handleChange}
+          />
+
           <input
             type="text"
             name="companyName"
@@ -163,16 +190,38 @@ useEffect(() => {
             type="button"
             name="companySubmit"
             className="companyinputs"
-            value="Submit"
+            value={submitval}
             onClick={handleSubmit}
           />
         </div>
-      </div>
+      </div> ):( <p>   </p> )}
 
 
 
-          
-        )}
+      
+
+    <div className='company mobwidth'>
+        {company.length > 0 ? (
+          company.map((com) => (
+            <div className='tab-home' key={com.company_name}>
+              <h2>
+               {com.company_name || ""}  
+              </h2>
+              <p>
+                Address: {com.company_address || ""}  
+              </p>
+              <p>
+                TRN:  {String(com.company_trn || "")}
+              </p>
+              <p>
+                Amount:  {String(com.company_amount || "")} 
+              </p>
+              
+                <a className='btn'  onClick={setShowEdit} >Edit New Company </a>
+               
+            </div>
+          ))
+        ): ( <p>   </p> )}
       </div>
       
 

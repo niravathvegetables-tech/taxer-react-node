@@ -1,0 +1,71 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.taxapp{
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+} 
+
+.header-menu{
+  list-style: none;       /* removes bullet points */
+  padding: 0;
+  margin: 0;
+         
+  gap: 20px;              /* spacing between items */
+
+  position: relative;     /* positions the menu */
+
+  margin-top: 20px;      /* spacing from the top */
+  margin-left: 20px;     /* spacing from the left */
+}
+
+.header-menu li {
+  display: inline;    /* puts items in one line */
+  margin-right: 20px; /* spacing between items */
+  cursor: pointer; 
+}
+
+
+.taxapp-body-inputs input {
+  display: block;
+  margin: 10px;
+  padding: 5px;
+  width: 200px;
+}

@@ -3,6 +3,13 @@ import logo from './logo.svg';
 import './App.css';
 import Header from './component/Header';
 import url from './component/Config';
+import Contra from './component/Contra';
+import Receipt from './component/Receipt';
+import Payment from './component/Payment';
+import Purchase from './component/Purchase';
+import Sales from './component/Sales';
+import Stock from './component/Stock';
+import Tax from './component/Tax';
 
 // Define the shape of your form data
 interface FormData {
@@ -11,7 +18,7 @@ interface FormData {
   companyTrn: string;
   companyAmount: string;
   companyID: string;
-
+  
 }
 
 interface Company {
@@ -24,6 +31,8 @@ interface Company {
   company_amount: string;
   showinfo: boolean;
     submitval:string;
+    activeTab:string;
+    showdefaulter:boolean;
 }
 
 const App: React.FC = () => {
@@ -37,14 +46,26 @@ const App: React.FC = () => {
   });
 
   const [company, setCompany] = useState<Company[]>([]);
-
+  const [activeTab, setActiveTab] = useState("Home");
       const [loading, setLoading] = useState(true);
      const [error, setError] = useState<string | null>(null);
   const [showinfo, setShowinfo] = useState<boolean>(true);
 
+  const [showdefaulter, setShowdefaulter] = useState<boolean>(false);
+
   const[submitval,setSubmitbtnval]=useState<string>('Submit');
 
-  
+  function handleTabChange(tab: string) {
+    setActiveTab(tab);
+
+    if(tab === "Home"){
+
+      setShowdefaulter(true);
+    }else{
+      setShowdefaulter(false);
+    }
+    
+  }
      
 
 useEffect(() => {
@@ -131,8 +152,45 @@ try{
   return (
     <div className="taxapp">
       <div className="taxapp-header">
-        <Header />
+   
+      <Header onTabChange={handleTabChange} />
+
+
       </div>
+
+    {activeTab === "Contra" &&
+    <Contra />       
+      
+    }
+    
+    {activeTab === "Receipt" &&
+    <Receipt />           
+    }
+
+
+     {activeTab === "Tax" &&
+    <Tax />           
+    }
+
+
+    {activeTab === "Stock" &&
+    <Stock />           
+    }
+
+
+  {activeTab === "Purchase" &&
+    <Purchase />           
+    }
+
+  
+  {activeTab === "Sales" &&
+    <Sales />           
+    }
+
+    {activeTab === "Payment" &&
+    <Payment />           
+    }
+
 
       {showinfo ? (
 
@@ -198,7 +256,7 @@ try{
 
 
 
-      
+       {showdefaulter ? (
 
     <div className='company mobwidth'>
         {company.length > 0 ? (
@@ -225,7 +283,7 @@ try{
       </div>
       
 
-
+        ):( <p>   </p> )}
 
 
 

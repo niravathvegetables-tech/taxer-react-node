@@ -1,16 +1,25 @@
 import React from 'react';
 
-function Header() {
+interface HeaderProps {
+  onTabChange: (tab: string) => void;
+}
+
+function Header({ onTabChange }: HeaderProps) {
+
+    const navItems = ["Home", "Stock", "Purchase", "Sales", "Receipt", "Payment", "Contra", "Tax"];
+ 
+
   return (
     <div>
      <ul className='header-menu'>
-            <li className='active'> Home </li>
-            <li>Stocks</li>
-            <li>Purchase</li>
-            <li>Sales</li>
-            <li>Receipt</li>
-            <li>Contra</li>
-            <li>Tax</li>
+           {navItems.map((item) => (
+              <li
+                key={item}
+                onClick={() => onTabChange(item)}
+              >
+                {item}
+              </li>
+            ))}
      </ul>
     </div>
   );

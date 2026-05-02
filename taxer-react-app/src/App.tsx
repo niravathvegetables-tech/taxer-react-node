@@ -49,6 +49,9 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Home");
       const [loading, setLoading] = useState(true);
      const [error, setError] = useState<string | null>(null);
+
+      const [companyid, setcompanyid] = useState<string | null>(null);
+
   const [showinfo, setShowinfo] = useState<boolean>(true);
 
   const [showdefaulter, setShowdefaulter] = useState<boolean>(false);
@@ -96,6 +99,7 @@ useEffect(() => {
     .then((data) => {
       setCompany(data.length > 0 ? data : []);
       console.log('Company data:', data);
+      setcompanyid(data[0].company_id);
       setLoading(false);
       setShowinfo(false);
       handleEdit(data[0]);
@@ -117,6 +121,11 @@ const setShowEdit=()=>{
   }
  
 
+};
+
+const cancelModal=()=> {
+
+    setShowinfo(false);
 };
 
   // Generic handler for input changes
@@ -159,7 +168,8 @@ try{
       </div>
 
     {activeTab === "Contra" &&
-    <Contra />       
+    
+    <Contra companyid={companyid}    />       
       
     }
     
@@ -193,6 +203,10 @@ try{
 
 
       {showinfo ? (
+
+
+        <div className="modal-overlay">
+            <div className="modal-box modalpos">
 
     <div className="taxapp-body">
         <h1>Welcome to Taxer</h1>
@@ -252,15 +266,21 @@ try{
             onClick={handleSubmit}
           />
         </div>
-      </div> ):( <p>   </p> )}
+         <button className="btn-cancel" onClick={cancelModal} >Cancel</button>
+      </div> </div></div> ):( <p>   </p> )}
 
 
 
        {showdefaulter ? (
 
     <div className='company mobwidth'>
-        {company.length > 0 ? (
-          company.map((com) => (
+        {company.length  && (
+          company.map((com) => {
+
+
+
+            return(
+
             <div className='tab-home' key={com.company_name}>
               <h2>
                {com.company_name || ""}  
@@ -278,8 +298,9 @@ try{
                 <a className='btn'  onClick={setShowEdit} >Edit New Company </a>
                
             </div>
-          ))
-        ): ( <p>   </p> )}
+
+          ) } )
+        ) }
       </div>
       
 

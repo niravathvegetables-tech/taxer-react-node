@@ -6,7 +6,7 @@ const { handleCompanyRequest, getcompanydetails } = require("./company");
 
 const { handleContraRequest, getcontradetails ,deleteContraRequest  } = require("./contra");
 
-const { insertTax, gettaxdetails  } = require("./tax");
+const { handleTaxRequest, gettaxdetails,DeletetaxRequest  } = require("./tax");
 
 
 
@@ -51,7 +51,18 @@ const server = http.createServer((req, res) => {
 
   } else if (req.method === "POST" && req.url === "/tax") {
 
-     insertTax(req, res);
+     handleTaxRequest(req, res);
+
+
+
+     } else if (req.method === "POST" && req.url === "/updatetax") {
+
+     handleTaxRequest(req, res);
+
+
+   } else if (req.method === "POST" && req.url === "/deletetax") {
+
+     DeletetaxRequest(req, res);
 
 
    }else if (req.method === "GET" && req.url === "/gettax") { 

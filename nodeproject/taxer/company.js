@@ -19,6 +19,62 @@ function insertCompany(data, callback) {
   });
 }
 
+
+async function updateamountadd(amount, company_id) {
+  return new Promise((resolve, reject) => {
+    db.query("SELECT * FROM taxer_company WHERE company_id = ?", [company_id], (err, rows) => {
+      if (err) return reject(err);
+
+      if (rows.length === 0) return reject(new Error("Company not found"));
+
+      let resultamnt = parseFloat(rows[0].company_amount) - parseFloat(amount);
+      console.log("Updated amount:", resultamnt);
+
+      const query = `
+        UPDATE taxer_company SET company_amount = ?
+        WHERE company_id = ?
+      `;
+      db.query(query, [resultamnt, company_id], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  });
+}
+
+
+ 
+
+
+
+
+async function updateamountreduce(amount,company_id){
+
+   return new Promise((resolve, reject) => {
+    db.query("SELECT * FROM taxer_company WHERE company_id = ?", [company_id], (err, rows) => {
+      if (err) return reject(err);
+
+      if (rows.length === 0) return reject(new Error("Company not found"));
+
+      let resultamnt = parseFloat(rows[0].company_amount) + parseFloat(amount);
+      console.log("Updated amount:", resultamnt);
+
+      const query = `
+        UPDATE taxer_company SET company_amount = ?
+        WHERE company_id = ?
+      `;
+      db.query(query, [resultamnt, company_id], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  });
+
+
+}
+
+
+
 function updateCompany(data, callback) {
   const query = `
     UPDATE taxer_company SET
@@ -104,4 +160,4 @@ function handleCompanyRequest(req, res) {
   });
 }
 
-module.exports = { handleCompanyRequest, getcompanydetails }; // ✅ export both
+module.exports = { handleCompanyRequest, getcompanydetails,updateamountadd,updateamountreduce }; // ✅ export both

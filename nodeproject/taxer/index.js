@@ -1,9 +1,20 @@
 const http = require("http");
 const db = require("./db");
-const { createTaxerCompanyTable } = require("./setupTables");
+const { createTaxerCompanyTable,createTaxerContraTable,createTaxerTaxTable } = require("./setupTables");
 const { handleCompanyRequest, getcompanydetails } = require("./company");
 
+
+const { handleContraRequest, getcontradetails ,deleteContraRequest  } = require("./contra");
+
+const { insertTax, gettaxdetails  } = require("./tax");
+
+
+
 createTaxerCompanyTable();
+
+createTaxerTaxTable();
+
+createTaxerContraTable();
 
 const server = http.createServer((req, res) => {
 
@@ -18,9 +29,35 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === "GET" && req.url === "/getcompany") {
+
     getcompanydetails(res); // ✅ pass res
+    
   } else if (req.method === "POST" && req.url === "/company") {
+
     handleCompanyRequest(req, res);
+
+  }else if (req.method === "GET" && req.url === "/getcontra") { 
+
+ getcontradetails(res);
+
+ } else if (req.method === "POST" && req.url === "/contra") {
+
+ handleContraRequest(req, res);
+
+} else if (req.method === "POST" && req.url === "/deletecontra") {
+
+  deleteContraRequest(req, res);
+
+
+  } else if (req.method === "POST" && req.url === "/tax") {
+
+     insertTax(req, res);
+
+
+   }else if (req.method === "GET" && req.url === "/gettax") { 
+
+    gettaxdetails(res);
+
   } else {
     res.statusCode = 404;
     res.end("Not Found");

@@ -115,6 +115,13 @@ function DeletetaxRequest(req, res){
        const query = "DELETE FROM taxer_taxes WHERE tax_id = ?";
     db.query(query, [data.tax_id], (err, result) => {
       if (err) return reject(err);
+
+         console.log("Deltete Data data:", data);
+
+
+         res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ success: true, affectedRows: result.affectedRows }));
       
     });
 

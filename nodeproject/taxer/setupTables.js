@@ -63,5 +63,30 @@ function createTaxerContraTable() {
 }
 
 
+
+function createTaxerStockTable() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS taxer_stocks (
+      stocks_id INT AUTO_INCREMENT PRIMARY KEY,
+      company_id INT NOT NULL,
+      stocks_name VARCHAR(255) NOT NULL,
+      stocks_price VARCHAR(255) NOT NULL,
+      stocks_total VARCHAR(255) NOT NULL,
+      stocks_image VARCHAR(255) NOT NULL,
+      stocks_unit VARCHAR(255) NOT NULL
+       
+    )
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      console.error("Error creating table:", err);
+    } else {
+      console.log("Table taxer_stock is ready.");
+    }
+  });
+}
+
+
 module.exports = { createTaxerCompanyTable,
-  createTaxerContraTable,createTaxerTaxTable };
+  createTaxerContraTable,createTaxerTaxTable,createTaxerStockTable };

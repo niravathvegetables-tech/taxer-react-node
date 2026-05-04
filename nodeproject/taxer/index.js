@@ -1,23 +1,22 @@
 const http = require("http");
+const fs = require("fs");
+const path = require("path");
+
+// existing imports...
 const db = require("./db");
-const { createTaxerCompanyTable,createTaxerContraTable,createTaxerTaxTable } = require("./setupTables");
+const { createTaxerCompanyTable, createTaxerContraTable, createTaxerTaxTable,createTaxerStockTable } = require("./setupTables");
 const { handleCompanyRequest, getcompanydetails } = require("./company");
-
-
-const { handleContraRequest, getcontradetails ,deleteContraRequest  } = require("./contra");
-
-const { handleTaxRequest, gettaxdetails,DeletetaxRequest  } = require("./tax");
-
+const { handleContraRequest, getcontradetails, deleteContraRequest } = require("./contra");
+const { handleTaxRequest, gettaxdetails, DeletetaxRequest } = require("./tax");
+const { handleStockRequest } = require("./stock");
 
 
 createTaxerCompanyTable();
-
 createTaxerTaxTable();
-
 createTaxerContraTable();
+createTaxerStockTable();
 
 const server = http.createServer((req, res) => {
-
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -28,52 +27,88 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ✅ Serve index.html
+  if (req.method === "GET" && req.url === "/") {
+    const filePath = path.join(__dirname, "index.html");
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.statusCode = 500;
+        res.end("Error loading HTML file");
+      } else {
+        res.setHeader("Content-Type", "text/html");
+        res.end(data);
+      }
+    });
+    return;
+  }
+
+  // ✅ Serve static files (CSS/JS)
+  if (req.method === "GET" && (req.url.startsWith("/css") || req.url.startsWith("/js"))) {
+    const filePath = path.join(__dirname, req.url);
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.statusCode = 404;
+        res.end("File not found");
+      } else {
+        if (req.url.endsWith(".css")) res.setHeader("Content-Type", "text/css");
+        else if (req.url.endsWith(".js")) res.setHeader("Content-Type", "application/javascript");
+        else res.setHeader("Content-Type", "application/octet-stream");
+
+        res.end(data);
+      }
+    });
+    return;
+  }
+
+  // ✅ Your API routes
   if (req.method === "GET" && req.url === "/getcompany") {
 
-    getcompanydetails(res); // ✅ pass res
-    
+    getcompanydetails(res);
+
   } else if (req.method === "POST" && req.url === "/company") {
 
     handleCompanyRequest(req, res);
 
-  }else if (req.method === "GET" && req.url === "/getcontra") { 
+  } else if (req.method === "GET" && req.url === "/getcontra") {
 
- getcontradetails(res);
+    getcontradetails(res);
 
- } else if (req.method === "POST" && req.url === "/contra") {
+  } else if (req.method === "POST" && req.url === "/contra") {
 
- handleContraRequest(req, res);
+    handleContraRequest(req, res);
 
-} else if (req.method === "POST" && req.url === "/deletecontra") {
+  } else if (req.method === "POST" && req.url === "/deletecontra") {
 
-  deleteContraRequest(req, res);
-
+    deleteContraRequest(req, res);
 
   } else if (req.method === "POST" && req.url === "/tax") {
 
-     handleTaxRequest(req, res);
+    handleTaxRequest(req, res);
 
+  } else if (req.method === "POST" && req.url === "/updatetax") {
 
+    handleTaxRequest(req, res);
 
-     } else if (req.method === "POST" && req.url === "/updatetax") {
+  } else if (req.method === "POST" && req.url === "/deletetax") {
 
-     handleTaxRequest(req, res);
+    DeletetaxRequest(req, res);
 
-
-   } else if (req.method === "POST" && req.url === "/deletetax") {
-
-     DeletetaxRequest(req, res);
-
-
-   }else if (req.method === "GET" && req.url === "/gettax") { 
+  } else if (req.method === "GET" && req.url === "/gettax") {
 
     gettaxdetails(res);
 
+  } else if (req.method === "POST" && req.url === "/stock") {
+
+     handleStockRequest(req, res);
+
   } else {
+
     res.statusCode = 404;
     res.end("Not Found");
+
   }
-  
+
+
 });
 
 server.listen(3001, () => {

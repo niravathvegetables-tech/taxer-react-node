@@ -54,7 +54,7 @@ const App: React.FC = () => {
 
   const [showinfo, setShowinfo] = useState<boolean>(true);
 
-  const [showdefaulter, setShowdefaulter] = useState<boolean>(false);
+  const [showdefaulter, setShowdefaulter] = useState<boolean>(true);
 
   const[submitval,setSubmitbtnval]=useState<string>('Submit');
 
@@ -161,9 +161,14 @@ try{
   return (
     <div className="taxapp">
       <div className="taxapp-header">
+      <h3>{activeTab}</h3>
    
       <Header onTabChange={handleTabChange} />
 
+        
+         
+
+       
 
       </div>
 
@@ -184,7 +189,7 @@ try{
 
 
     {activeTab === "Stock" &&
-    <Stock />           
+    <Stock companyid={companyid} />           
     }
 
 

@@ -31,6 +31,8 @@
 
  const Contra: React.FC<ContraProps> = ({ companyid }) => {
 
+  const[showcontra,setshowcontra]= useState(0);
+
 
  const [contra, setContra] = useState<Contra[]>([]);
 
@@ -52,6 +54,16 @@ const[message,setmessage]= useState<string>(" Do set");
 
 
     const addbank = () => {
+
+      setFormData({
+         company_id: companyid ?? "",
+  contra_name: "",
+  contra_amount: "",
+  contra_date: new Date().toISOString().split("T")[0],
+  contra_id: ""
+});
+
+
       setShowbank(true);
     };
 
@@ -67,7 +79,7 @@ useEffect(() => {
 
   
 
-}, []); 
+}, [showcontra]); 
 
 
 function fetchContra() {
@@ -109,7 +121,7 @@ const delteContra=async(id: string)=>{
 
     setmessage("Deleted");
     // Refresh table
-    fetchContra();
+    setshowcontra(prev => prev + 1);
 
   } catch (err) {
     console.error("Error deleting contra:", err);
@@ -130,12 +142,9 @@ console.log("formData==>"+formData.contra_name);
   //   data.append('contra_amount', formData.contra_amount);
   //   data.append('contra_date', contraDate);
 
-      let endpoint = url + "tax";
+      let endpoint = url + "contra";
 
-      //  if (formData.contra_id) {
-      //   data.append("contra_id", formData.contra_id);
-      //   endpoint = url + "updatecontra";
-      // }
+    
 
 try{
 
@@ -148,19 +157,9 @@ try{
     const result = await response.json().then((data) => {
   setmessage("Success");
 
-// setTimeout(() => {
-//   setShowbank(false);
+   setshowcontra(prev => prev + 1);
 
-//  setFormData({
-//   company_id: companyid ?? "",
-//   contra_name: "",
-//   contra_amount: "",
-//   contra_date: new Date().toISOString().split("T")[0],
-//   contra_id: ""
-// });
-
-
-// }, 3000);
+ 
 
 
   return data;
@@ -196,6 +195,8 @@ console.log("Server response:", result);
 
             <div className="modal-overlay">
               <div className="modal-box modalpos">
+
+              <div className="modalinputs" >
                 <h2>AddBank{message}</h2>
 
                 <label>Company ID</label>
@@ -241,6 +242,7 @@ console.log("Server response:", result);
                     ADD
                   </button>
                   <button className="btn-cancel" onClick={cancelModal} >Cancel</button>
+                  </div>
                 </div>
               </div>
             </div>

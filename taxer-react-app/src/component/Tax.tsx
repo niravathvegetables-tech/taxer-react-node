@@ -1,6 +1,15 @@
   import React, { useState,useEffect } from "react";
+    import url from './Config';
 
   interface FormData{
+
+    tax_name : string,
+    tax_percent : string,
+    tax_id : string
+
+  }
+
+   interface Tax{
 
     tax_name : string,
     tax_percent : string,
@@ -13,6 +22,9 @@ const Tax: React.FC = () => {
 
   const[showtax,setshowtax]=useState<boolean>(false);
 
+const [stat, setStat] = useState(0);
+
+ const [tax, setTax] = useState<Tax[]>([]);
 
   const [formData, setFormData] = useState<FormData>({
   
@@ -33,7 +45,17 @@ const Tax: React.FC = () => {
 
   const showModal=()=>{
 
+    setFormData({
+
+
+    tax_name: "",
+  tax_percent: "",
+  tax_id:""
+
+  });
+
       setshowtax(true);
+
   }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +67,15 @@ const Tax: React.FC = () => {
   };
 
 
-  const AddTax=()=>{
+  const AddTax= async ()=>{
 
-    let endpoint = url + "contra";
+
+  let p= formData.tax_id ? "updatetax" : "tax" ;
+
+    let endpoint = url + p;
+
+
+
 
     try{
 
@@ -59,6 +87,8 @@ const Tax: React.FC = () => {
 
     const result = await response.json().then((data) => {
   setmessage("Success");
+
+  setStat(prev => prev + 1);
 
   return data;
 });
@@ -77,9 +107,88 @@ console.log("Server response:", result);
   }
 
 
+  useEffect(() => {
+  fetchTax(); 
+
+}, [stat]); 
+
+
+function fetchTax() {
+  fetch(url + "gettax")
+    .then((res) => res.json())
+    .then((data: Tax[]) => {
+      setTax(data.length > 0 ? data : []);
+      console.log("fetchTax data:", data);
+    })
+    .catch(() => {
+      // handle error
+    });
+}
+
+
+
+const Edittax=(tx : Tax)=>{
+
+  
+
+  setFormData({
+
+
+    tax_name: tx.tax_name,
+  tax_percent: tx.tax_percent,
+  tax_id: tx.tax_id
+
+  });
+
+  setshowtax(true);
+
+}
+
+
+const Delete = async (tx: Tax) => {
+
+  setmessage("Deleting");
+
+  let endpoint = url + "deletetax";
+
+  try {
+
+    const response = await fetch(endpoint, {
+
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tax_id: tx.tax_id })
+    });
+
+
+    
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    setmessage("Success");
+
+    setStat(prev => prev + 1);
+
+    console.log("Server response:", data);
+
+  } catch (err) {
+
+    console.error("Error deleting tax:", err);
+
+    setmessage("Delete failed");
+
+  }
+
+};
+
+
+
   return (
     <div className="contra-container">
-      <h1>Tax {message} </h1>
+      <h1>Tax {message}- {stat} </h1>
      
       <a className="default-btn" onClick={showModal}>Add Tax</a>
 
@@ -91,15 +200,24 @@ console.log("Server response:", result);
 
             <div className="modal-overlay">
               <div className="modal-box modalpos">
-                <h2>AddTax {message}</h2>
 
-                <label>Company ID</label>
+
+              <div className="modalinputs" >
+
+                <h2>AddTax {message}  </h2>
+
+                <label>Tax ID {message} </label>
                   
-
+                <input type="hidden"
+                  name="tax_id"
+                  value={formData.tax_id}
+                    readOnly
+                   
+                />
 
                 <label>Tax Name</label>
                 <input
-                  name="contra_name"
+                  name="tax_name"
                   value={formData.tax_name}
                    onChange={handleChange}
                    
@@ -107,7 +225,7 @@ console.log("Server response:", result);
 
                 <label>Percent</label>
                 <input
-                  name="contra_amount"
+                  name="tax_percent"
                   value={formData.tax_percent}
                    onChange={handleChange}
                    
@@ -121,9 +239,12 @@ console.log("Server response:", result);
                    
                     onClick={AddTax} 
                   >
-                    ADD
+                   {formData.tax_id ? "Edit" : "Add"}
+
                   </button>
                   <button className="btn-cancel" onClick={cancelModal} >Cancel</button>
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -134,6 +255,63 @@ console.log("Server response:", result);
           )}
 
 
+         {tax && (
+
+          <div className="resulttable">
+
+         <table>
+          <thead>
+            <tr>
+              <th>Tax Name</th>
+              <th>Tax Percent</th>   
+              <th>Edit</th>
+              <th>Delete</th>       
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+
+
+          {tax.map( (tx)=>{
+
+
+
+              return(
+
+
+
+                  <tr>
+              <td>{tx.tax_name}</td>
+              <td>{tx.tax_percent}</td> 
+              <td><a onClick={() => Edittax(tx)}>Edit</a></td>
+              <td><a onClick={() => Delete(tx)}>Delete</a></td>          
+               </tr>
+
+
+
+
+
+                )
+
+
+
+
+          }
+
+
+
+
+
+            )}
+
+
+
+
+          </table>
+
+          </div>
+
+          )}
 
     </div>
   );

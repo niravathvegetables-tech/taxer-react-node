@@ -8,7 +8,7 @@ const { createTaxerCompanyTable, createTaxerContraTable, createTaxerTaxTable,cre
 const { handleCompanyRequest, getcompanydetails } = require("./company");
 const { handleContraRequest, getcontradetails, deleteContraRequest } = require("./contra");
 const { handleTaxRequest, gettaxdetails, DeletetaxRequest } = require("./tax");
-const { handleStockRequest } = require("./stock");
+const { handleStockRequest,getstockdetailsid } = require("./stock");
 
 
 createTaxerCompanyTable();
@@ -40,6 +40,30 @@ const server = http.createServer((req, res) => {
       }
     });
     return;
+  }
+
+  if (req.method === "GET" && req.url.startsWith("/uploads/")) {
+    const fileName = req.url.replace("/uploads/", "");
+    const filePath = path.join(__dirname, "uploads", fileName);
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.statusCode = 404;
+        res.end("Image not found");
+      } else {
+        const ext = path.extname(fileName).toLowerCase();
+        const mimeTypes = {
+          ".png": "image/png",
+          ".jpg": "image/jpeg",
+          ".jpeg": "image/jpeg",
+          ".gif": "image/gif",
+          ".webp": "image/webp"
+        };
+        res.setHeader("Content-Type", mimeTypes[ext] || "application/octet-stream");
+        res.end(data);
+      }
+    });
+    return; // ✅ important — stop here
   }
 
   // ✅ Serve static files (CSS/JS)
@@ -100,6 +124,10 @@ const server = http.createServer((req, res) => {
   } else if (req.method === "POST" && req.url === "/stock") {
 
      handleStockRequest(req, res);
+
+      } else if (req.method === "GET" && req.url === "/getstock") {
+
+        getstockdetailsid(res)
 
   } else {
 

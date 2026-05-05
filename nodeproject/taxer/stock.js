@@ -2,6 +2,21 @@ const db = require("./db");
 const multer = require("multer");
 const path = require("path");
 
+ 
+
+function getstockdetailsid(res) {
+  db.query("SELECT * FROM taxer_stocks", (err, rows) => {
+    if (err) {
+      res.statusCode = 500;
+      res.end(JSON.stringify({ error: "Error fetching data" }));
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(rows));
+  });
+}
+
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // folder to save images
@@ -75,4 +90,4 @@ function insertStock(data, callback) {
   );
 }
 
-module.exports = { handleStockRequest };
+module.exports = { handleStockRequest,getstockdetailsid };

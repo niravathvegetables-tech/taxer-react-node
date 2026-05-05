@@ -1,4 +1,4 @@
-import React, { useState,useRef  } from "react";
+import React, { useState,useRef,useEffect  } from "react";
 import url from "./Config";
 
 interface FormData {
@@ -8,14 +8,49 @@ interface FormData {
   stocks_total: string;
   stocks_unit: string;
   stocks_image: string; // preview URL
-  file?: File;          // actual file object
+    file?: File;        // actual file object
 }
+
+
+  interface Stock{
+
+    stocks_id : string,
+    stocks_name : string,
+    stocks_price : string,
+    stocks_total : string,
+    stocks_unit : string,
+    stocks_image : string
+
+  }
+
 
 interface StockProps {
   companyid: string | null;
 }
 
 const Stock: React.FC<StockProps> = ({ companyid }) => {
+
+const [stock, setStock] = useState<Stock[]>([]);
+
+useEffect(() => {
+  fetchStock();
+
+  
+
+}, []); 
+
+
+function fetchStock() {
+  fetch(url + "getstock")
+    .then((res) => res.json())
+    .then((data: Stock[]) => {
+      setStock(data.length > 0 ? data : []);
+      console.log("Stock data:", data);
+    })
+    .catch(() => {
+      // handle error
+    });
+}
 
 
    const videoRef = useRef<HTMLVideoElement>(null);
@@ -73,6 +108,8 @@ const Stock: React.FC<StockProps> = ({ companyid }) => {
   };
 
   const [showmodal, Setshowmodal] = useState<boolean>(false);
+
+  const [fun, SetFun] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<FormData>({
     stocks_id: "",
@@ -152,7 +189,11 @@ const Stock: React.FC<StockProps> = ({ companyid }) => {
   return (
     <>
       <div className="contra-container">
-        <h1>Stock</h1>
+     <h1 onClick={() => SetFun(prev => !prev)}>Stock</h1>
+
+        {fun &&(
+
+        <div className="fun">
 
         <a onClick={openCamera} >Video</a> <br/>
 
@@ -162,6 +203,8 @@ const Stock: React.FC<StockProps> = ({ companyid }) => {
       <a onClick={saveVideo}>Save</a> <br />
 
          <video ref={videoRef} autoPlay style={{ width: "400px", border: "1px solid #ccc" }} /> <br/>
+
+         </div> )}
 
         <a onClick={addStock}>Add Stock</a>
       </div>
@@ -232,6 +275,71 @@ const Stock: React.FC<StockProps> = ({ companyid }) => {
           </div>
         </div>
       )}
+
+
+
+
+
+
+  {stock && (
+        <div className="resulttable">
+
+         <table>
+          <thead>
+            <tr>
+              <th>Stock Name</th>
+              <th>Stock Amount</th>
+              <th>Stock Unit</th>  
+              <th>Image</th>            
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+
+
+
+          {stock.map((stk)=>{
+
+
+            
+
+            let imgFile = stk.stocks_image?.replace(/^uploads[\\/]/, "");
+let urlimg = 'http://localhost:3001/uploads/' + imgFile;
+
+
+              return(
+
+                   <tr>
+                   <td>{stk.stocks_name}</td>
+                   <td>{stk.stocks_price}</td>
+                   <td>{stk.stocks_total}-{stk.stocks_unit}</td>
+                   <td><img src={urlimg} width="250px" height="150px"/></td>
+                   </tr>
+
+                )
+
+
+
+
+
+          }
+
+
+            )}
+
+
+
+          </tbody>
+          </table>
+
+          </div>
+          )}
+
+
+
+
+
+
     </>
   );
 };

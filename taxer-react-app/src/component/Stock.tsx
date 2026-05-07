@@ -109,6 +109,8 @@ function fetchStock() {
 
   const [showmodal, Setshowmodal] = useState<boolean>(false);
 
+  const [showdelmodal, Setshowdelmodal] = useState<boolean>(false);
+
   const [fun, SetFun] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<FormData>({
@@ -138,7 +140,24 @@ function fetchStock() {
   };
 
   const submitModal = async () => {
-    let endpoint = url + "stock";
+
+
+ let endpoint = "";
+
+  if (formData.stocks_id) {
+
+    endpoint = url + "stock";   // update if ID exists
+
+  } else {
+
+    endpoint = url + "stock";         // insert if no ID
+
+
+  }
+
+
+
+        
 
     try {
       const formDataToSend = new FormData();
@@ -156,6 +175,8 @@ function fetchStock() {
         formDataToSend.append("stocks_image", formData.file);
       }
 
+
+         
       const response = await fetch(endpoint, {
         method: "POST",
         body: formDataToSend
@@ -186,6 +207,88 @@ function fetchStock() {
     }
   };
 
+
+  const Edit = (stk: Stock) => {
+     Setshowmodal(true);
+
+      setFormData({
+    stocks_id: stk.stocks_id,
+    stocks_name: stk.stocks_name,
+    stocks_price: stk.stocks_price,
+    stocks_total: stk.stocks_total,
+    stocks_unit: stk.stocks_unit,
+    stocks_image: 'http://localhost:3001/uploads/'+stk.stocks_image, // existing image path
+    file: undefined                 // no new file yet
+  });                 // no new file yet
+  
+
+
+  };
+
+
+
+
+const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+
+    const Delete = (stk: Stock) => {
+    console.log(stk);
+setSelectedStock(stk);
+
+setmessage("Ohh Noo are you going to do really");
+    Setshowdelmodal(true);
+  };
+
+
+
+ const[message,setmessage]= useState<string>(" Do set");
+
+
+
+const Deleting = async () => {
+  if (!selectedStock) {
+    console.error("No stock selected for deletion");
+    return;
+  }
+
+  setmessage("Deleting");
+
+  const endpoint = url + "deletestock";
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ stocks_id: selectedStock.stocks_id })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    setmessage("Success");
+
+    // close modal after success
+     
+
+    console.log("Server response:", data);
+
+    // refresh table
+    fetchStock();
+  } catch (err) {
+    console.error("Error deleting stock:", err);
+    setmessage("Delete failed");
+  }
+};
+
+
+
+
+
+
+
+
+
   return (
     <>
       <div className="contra-container">
@@ -208,6 +311,26 @@ function fetchStock() {
 
         <a onClick={addStock}>Add Stock</a>
       </div>
+
+
+      {showdelmodal && (
+        <div className="modal-overlay">
+          <div className="modal-box modalpos">
+            <h2>Can we delte this row??</h2>
+
+
+             <a onClick={() => Deleting()}>Yes</a>
+
+            <a onClick={() => Setshowdelmodal(false)}>No</a>
+
+
+
+            <p>{message}</p>
+
+            </div>
+            </div>
+
+            )}
 
       {showmodal && (
         <div className="modal-overlay">
@@ -290,7 +413,8 @@ function fetchStock() {
               <th>Stock Name</th>
               <th>Stock Amount</th>
               <th>Stock Unit</th>  
-              <th>Image</th>            
+              <th>Image</th>    
+              <th>Edit</th>        
               <th>Delete</th>
             </tr>
           </thead>
@@ -314,6 +438,8 @@ let urlimg = 'http://localhost:3001/uploads/' + imgFile;
                    <td>{stk.stocks_price}</td>
                    <td>{stk.stocks_total}-{stk.stocks_unit}</td>
                    <td><img src={urlimg} width="250px" height="150px"/></td>
+                  <td><a onClick={() => Edit(stk)}>Edit</a></td>
+                  <td><a onClick={() => Delete(stk)}>Delete</a></td>
                    </tr>
 
                 )

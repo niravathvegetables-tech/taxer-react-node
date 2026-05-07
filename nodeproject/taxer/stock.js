@@ -66,6 +66,63 @@ function handleStockRequest(req, res) {
 }
 
 
+ 
+function updateStock(data, callback) {
+
+
+  if(data.stocks_image){
+
+  const query = `
+    UPDATE taxer_stocks SET
+      stocks_name = ?,
+      stocks_price = ?,
+      stocks_total= ?,
+       stocks_image= ?,
+        stocks_unit= ?
+    WHERE stocks_id = ?
+  `;
+
+  db.query(
+    query,
+    [data.stocks_name,data.stocks_price, data.stocks_total,data.stocks_image,data.stocks_unit,data.stocks_id],
+    (err, result) => {
+      if (err) return callback(err);
+      callback(null, result);
+    }
+  );
+
+}else{
+
+
+  const query = `
+    UPDATE taxer_stocks SET
+      stocks_name = ?,
+      stocks_price = ?,
+      stocks_total= ?,
+       
+        stocks_unit= ?
+    WHERE stocks_id = ?
+  `;
+
+  db.query(
+    query,
+    [data.stocks_name,data.stocks_price, data.stocks_total,data.stocks_unit,data.stocks_id],
+    (err, result) => {
+      if (err) return callback(err);
+      callback(null, result);
+    }
+  );
+
+
+
+}
+
+
+
+
+}
+
+
 function insertStock(data, callback) {
   const query = `
     INSERT INTO taxer_stocks 
@@ -90,4 +147,41 @@ function insertStock(data, callback) {
   );
 }
 
-module.exports = { handleStockRequest,getstockdetailsid };
+
+
+function DeleteStockRequest(req, res){
+
+ let body = "";
+  req.on("data", chunk => { body += chunk.toString(); });
+  req.on("end", () => {
+    try {
+      const data = JSON.parse(body);
+      console.log("Received data:", data);
+
+
+       const query = "DELETE FROM taxer_stocks WHERE stocks_id = ?";
+    db.query(query, [data.stocks_id], (err, result) => {
+      if (err) return reject(err);
+
+         console.log("Deltete Data data:", data);
+
+
+         res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ success: true, affectedRows: result.affectedRows }));
+      
+    });
+
+
+
+       } catch (parseErr) {
+      console.error("JSON parse error:", parseErr);
+      res.statusCode = 400;
+      res.end(JSON.stringify({ error: "Invalid JSON" }));
+    }
+
+      });
+  
+}
+
+module.exports = { handleStockRequest,getstockdetailsid,DeleteStockRequest };

@@ -8,7 +8,7 @@ const { createTaxerCompanyTable, createTaxerContraTable, createTaxerTaxTable,cre
 const { handleCompanyRequest, getcompanydetails } = require("./company");
 const { handleContraRequest, getcontradetails, deleteContraRequest } = require("./contra");
 const { handleTaxRequest, gettaxdetails, DeletetaxRequest } = require("./tax");
-const { handleStockRequest,getstockdetailsid } = require("./stock");
+const { handleStockRequest,getstockdetailsid,DeleteStockRequest } = require("./stock");
 
 
 createTaxerCompanyTable();
@@ -124,6 +124,11 @@ const server = http.createServer((req, res) => {
   } else if (req.method === "POST" && req.url === "/stock") {
 
      handleStockRequest(req, res);
+
+       } else if (req.method === "POST" && req.url === "/deletestock") {
+
+    DeleteStockRequest(req, res);
+
 
       } else if (req.method === "GET" && req.url === "/getstock") {
 

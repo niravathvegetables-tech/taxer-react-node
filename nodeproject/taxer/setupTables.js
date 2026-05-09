@@ -1,6 +1,6 @@
 const db = require("./db");
 
-function createTaxerTaxTable() {
+function createTaxerTaxTable(){
   const query = `
     CREATE TABLE IF NOT EXISTS taxer_taxes (
       tax_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -14,6 +14,118 @@ function createTaxerTaxTable() {
       console.error("Error creating table:", err);
     } else {
       console.log("Table taxer_taxes is ready.");
+    }
+  });
+}
+
+
+function createTaxerTransactionTable(){
+  const query = `
+    CREATE TABLE IF NOT EXISTS taxer_transaction (
+      transaction_id   INT AUTO_INCREMENT PRIMARY KEY,
+       company_id INT NOT NULL,
+      transactionamount VARCHAR(255) NOT NULL,
+      tax VARCHAR(255) NOT NULL,
+       Total VARCHAR(255) NOT NULL,
+       date DATE NOT NULL
+    )
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      console.error("Error creating table:", err);
+    } else {
+      console.log("Table taxer_transaction is ready.");
+    }
+  });
+}
+
+
+function createTaxerSalesTable(){
+  const query = `
+    CREATE TABLE IF NOT EXISTS taxer_sales (
+      sales_id    INT AUTO_INCREMENT PRIMARY KEY,
+       transaction_id INT NOT NULL,
+        stocks_id INT NOT NULL,
+      sales_amount VARCHAR(255) NOT NULL,
+      sales_count VARCHAR(255) NOT NULL,
+       sales_item_type VARCHAR(255) NOT NULL,
+        sales_total VARCHAR(255) NOT NULL,
+       date DATE NOT NULL
+    )
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      console.error("Error creating table:", err);
+    } else {
+      console.log("Table taxer_sales is ready.");
+    }
+  });
+}
+
+
+function createTaxerPurchaseTable(){
+  const query = `
+    CREATE TABLE IF NOT EXISTS taxer_purchase (
+      purchase_id   INT AUTO_INCREMENT PRIMARY KEY,
+       transaction_id INT NOT NULL,
+        stocks_id INT NOT NULL,
+      purchase_amount VARCHAR(255) NOT NULL,
+      purchase_count VARCHAR(255) NOT NULL,
+       purchase_item_type VARCHAR(255) NOT NULL,
+        purchase_total VARCHAR(255) NOT NULL,
+       date DATE NOT NULL
+    )
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      console.error("Error creating table:", err);
+    } else {
+      console.log("Table taxer_purchase is ready.");
+    }
+  });
+}
+
+
+
+function createTaxerReceiptTable(){
+  const query = `
+    CREATE TABLE IF NOT EXISTS taxer_receipt (
+      receipt_id  INT AUTO_INCREMENT PRIMARY KEY,
+       company_id INT NOT NULL,
+      receipt_name VARCHAR(255) NOT NULL,
+      receipt_amount VARCHAR(255) NOT NULL,
+       receipt_date DATE NOT NULL
+    )
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      console.error("Error creating table:", err);
+    } else {
+      console.log("Table taxer_receipt is ready.");
+    }
+  });
+}
+
+function createTaxerPaymentTable() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS taxer_payment (
+      payment_id  INT AUTO_INCREMENT PRIMARY KEY,
+        company_id INT NOT NULL,
+        payment_name VARCHAR(255) NOT NULL,
+      payment_amount VARCHAR(255) NOT NULL,
+       payment_date DATE NOT NULL
+    )
+  `;
+
+  db.query(query, (err) => {
+    if (err) {
+      console.error("Error creating table:", err);
+    } else {
+      console.log("Table taxer_payment is ready.");
     }
   });
 }
@@ -89,4 +201,4 @@ function createTaxerStockTable() {
 
 
 module.exports = { createTaxerCompanyTable,
-  createTaxerContraTable,createTaxerTaxTable,createTaxerStockTable };
+  createTaxerContraTable,createTaxerSalesTable,createTaxerTaxTable,createTaxerStockTable,createTaxerPaymentTable,createTaxerReceiptTable,createTaxerPurchaseTable,createTaxerTransactionTable };

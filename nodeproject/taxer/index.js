@@ -4,17 +4,31 @@ const path = require("path");
 
 // existing imports...
 const db = require("./db");
-const { createTaxerCompanyTable, createTaxerContraTable, createTaxerTaxTable,createTaxerStockTable } = require("./setupTables");
+const { createTaxerCompanyTable, createTaxerContraTable,createTaxerSalesTable,createTaxerTaxTable,createTaxerStockTable,createTaxerPaymentTable,createTaxerReceiptTable,createTaxerPurchaseTable,createTaxerTransactionTable } = require("./setupTables");
 const { handleCompanyRequest, getcompanydetails } = require("./company");
 const { handleContraRequest, getcontradetails, deleteContraRequest } = require("./contra");
 const { handleTaxRequest, gettaxdetails, DeletetaxRequest } = require("./tax");
 const { handleStockRequest,getstockdetailsid,DeleteStockRequest } = require("./stock");
+
+const { handlePayemntRequest,getpaymentdetailsid,getpaymentdetails,DeletePayemntRequest } = require("./payment");
+
+const { handleRecieptRequest,getRecieptdetailsid,getRecieptdetails,DeleteRecieptRequest } = require("./receipt");
+
+
 
 
 createTaxerCompanyTable();
 createTaxerTaxTable();
 createTaxerContraTable();
 createTaxerStockTable();
+
+createTaxerReceiptTable();
+createTaxerPaymentTable();
+
+createTaxerPurchaseTable();
+createTaxerTransactionTable();
+createTaxerSalesTable();
+
 
 const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -132,7 +146,46 @@ const server = http.createServer((req, res) => {
 
       } else if (req.method === "GET" && req.url === "/getstock") {
 
-        getstockdetailsid(res)
+        getstockdetailsid(res);
+
+      } else if (req.method === "POST" && req.url === "/paymentinsert") {
+
+     handlePayemntRequest(req, res);
+
+     } else if (req.method === "POST" && req.url === "/updatepayment") {
+
+     handlePayemntRequest(req, res);
+     
+
+      } else if (req.method === "GET" && req.url === "/getpayment") {
+
+        getpaymentdetails(res);
+
+
+         } else if (req.method === "POST" && req.url === "/deletepayment") {
+
+    DeletePayemntRequest(req, res);
+
+
+
+     } else if (req.method === "POST" && req.url === "/recieptinsert") {
+
+     handleRecieptRequest(req, res);
+
+     } else if (req.method === "POST" && req.url === "/updatereciept") {
+
+     handleRecieptRequest(req, res);
+     
+
+      } else if (req.method === "GET" && req.url === "/getreciept") {
+
+        getRecieptdetails(res);
+
+
+         } else if (req.method === "POST" && req.url === "/deletereciept") {
+
+    DeleteRecieptRequest(req, res);
+
 
   } else {
 
@@ -147,3 +200,6 @@ const server = http.createServer((req, res) => {
 server.listen(3001, () => {
   console.log("Server running at http://localhost:3001/");
 });
+
+
+ 

@@ -184,6 +184,18 @@ function fetchStock() {
 
       const data = await response.json();
       console.log("Server response:", data);
+
+       setFormData({
+      stocks_id: "",
+      stocks_name: "",
+      stocks_price: "",
+      stocks_total: "",
+      stocks_image: "",
+      stocks_unit: "",
+      file: undefined
+    });
+
+       
     } catch (err) {
       console.error("Error submitting stock:", err);
     }

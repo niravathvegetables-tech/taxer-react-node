@@ -228,7 +228,7 @@ console.log("Server response:", result);
                   name="contra_date"
                   type="date"
                   className="table-input"
-                  value={contraDate}
+                   value={formData.contra_date}
                    onChange={handleChange}
                   
                 />

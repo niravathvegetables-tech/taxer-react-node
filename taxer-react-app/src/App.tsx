@@ -179,7 +179,7 @@ try{
     }
     
     {activeTab === "Receipt" &&
-    <Receipt />           
+    <Receipt companyid={companyid} />           
     }
 
 
@@ -203,7 +203,7 @@ try{
     }
 
     {activeTab === "Payment" &&
-    <Payment />           
+    <Payment companyid={companyid}  />           
     }
 
 

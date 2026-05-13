@@ -1,6 +1,8 @@
 import React, { useState,useRef,useEffect  } from "react";
     import url from './Config';
 
+
+
 interface FormData {
   payment_id: number | null;
   payment_name: string;
@@ -197,6 +199,8 @@ const Edit = (py: Payments) => {
   return (
     <div className="contra-container">
       <h1>Payment</h1>
+
+    
       <a className="default-btn" onClick={showModal}>Add Payment</a>
 
       {showpayment && (

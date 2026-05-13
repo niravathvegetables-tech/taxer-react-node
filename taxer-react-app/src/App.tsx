@@ -11,6 +11,8 @@ import Sales from './component/Sales';
 import Stock from './component/Stock';
 import Tax from './component/Tax';
 
+    import SVG from './component/Svg';
+
 // Define the shape of your form data
 interface FormData {
   companyName: string;
@@ -46,6 +48,12 @@ const App: React.FC = () => {
   });
 
   const [company, setCompany] = useState<Company[]>([]);
+
+
+  const [hoverTrigger, setHoverTrigger] = useState(0);
+
+
+
   const [activeTab, setActiveTab] = useState("Home");
       const [loading, setLoading] = useState(true);
      const [error, setError] = useState<string | null>(null);
@@ -60,6 +68,8 @@ const App: React.FC = () => {
 
   function handleTabChange(tab: string) {
     setActiveTab(tab);
+
+    setHoverTrigger(prev => prev + 1);
 
     if(tab === "Home"){
 
@@ -161,7 +171,11 @@ try{
   return (
     <div className="taxapp">
       <div className="taxapp-header">
-      <h3>{activeTab}</h3>
+
+        <SVG triggerHover={hoverTrigger} />
+
+
+      
    
       <Header onTabChange={handleTabChange} />
 
@@ -194,7 +208,7 @@ try{
 
 
   {activeTab === "Purchase" &&
-    <Purchase />           
+    <Purchase companyid={companyid} />           
     }
 
   
@@ -278,7 +292,7 @@ try{
 
        {showdefaulter ? (
 
-    <div className='company mobwidth'>
+    <div className='contra-container mobwidth'>
         {company.length  && (
           company.map((com) => {
 
@@ -300,7 +314,7 @@ try{
                 Amount:  {String(com.company_amount || "")} 
               </p>
               
-                <a className='btn'  onClick={setShowEdit} >Edit New Company </a>
+                <a className='btn default-btn'  onClick={setShowEdit} >Edit New Company </a>
                
             </div>
 

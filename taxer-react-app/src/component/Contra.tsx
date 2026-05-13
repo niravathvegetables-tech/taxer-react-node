@@ -186,7 +186,7 @@ console.log("Server response:", result);
         <div className="contra-container">
           <h1>Contra {message}</h1>
           <a className="default-btn" onClick={addbank}>Add bank</a>
-        </div>
+        
 
         {showbank && (
 
@@ -312,6 +312,8 @@ if (Number(cont.contra_amount) <= 2000) {
         </div>
 
       )}
+
+          </div>
 
       </>
     );

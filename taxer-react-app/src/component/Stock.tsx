@@ -321,8 +321,8 @@ const Deleting = async () => {
 
          </div> )}
 
-        <a onClick={addStock}>Add Stock</a>
-      </div>
+        <a className="default-btn" onClick={addStock}>Add Stock</a>
+      
 
 
       {showdelmodal && (
@@ -476,7 +476,7 @@ let urlimg = 'http://localhost:3001/uploads/' + imgFile;
 
 
 
-
+  </div>
 
     </>
   );

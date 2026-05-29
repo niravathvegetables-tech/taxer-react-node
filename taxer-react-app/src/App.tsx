@@ -37,6 +37,14 @@ interface Company {
     showdefaulter:boolean;
 }
 
+interface tax{
+
+  tax_id: number; 
+   tax_name: string;
+   tax_percent: number;
+  
+}
+
 const App: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
@@ -51,6 +59,9 @@ const App: React.FC = () => {
 
 
   const [hoverTrigger, setHoverTrigger] = useState(0);
+
+
+  const[taxarray,setTax] =useState<tax[]>([]);
 
 
 
@@ -84,7 +95,7 @@ const App: React.FC = () => {
 useEffect(() => {
   fetchCompany();
 
-  
+  fetchTax();
 
 }, []); 
 
@@ -118,6 +129,21 @@ useEffect(() => {
       setError('Failed to connect to server');
       setLoading(false);
        setShowinfo(true);
+    });
+}
+
+
+function fetchTax() {
+  fetch(url+"gettax")
+    .then((res) => res.json())
+    .then((data) => {
+      setTax(data.length > 0 ? data : []);
+      console.log('Tax data:', data);
+       
+    })
+    .catch(() => {
+      setError('Failed to connect to server');
+       
     });
 }
 
@@ -228,7 +254,7 @@ try{
             <div className="modal-box modalpos">
 
     <div className="taxapp-body">
-        <h1>Welcome to Taxer</h1>
+        <h1>Welcome to Taxer here</h1>
 
         <div className="taxapp-body-inputs">
 
@@ -276,6 +302,28 @@ try{
             value={formData.companyAmount}
             onChange={handleChange}
           />
+
+
+
+            <select className="taxer" name="tax" >
+
+            {taxarray.length &&(
+
+               taxarray.map((t) => {
+
+
+                  return(
+                    
+                    <option value={t.tax_id}  >{t.tax_name}- {t.tax_percent}</option>
+
+                    )}
+              ))}
+
+            </select>
+
+
+
+
 
           <input
             type="button"

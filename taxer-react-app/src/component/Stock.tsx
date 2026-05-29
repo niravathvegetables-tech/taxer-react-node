@@ -229,7 +229,7 @@ function fetchStock() {
     stocks_price: stk.stocks_price,
     stocks_total: stk.stocks_total,
     stocks_unit: stk.stocks_unit,
-    stocks_image: 'http://localhost:3001/uploads/'+stk.stocks_image, // existing image path
+    stocks_image: url+'/uploads/'+stk.stocks_image, // existing image path
     file: undefined                 // no new file yet
   });                 // no new file yet
   
@@ -440,7 +440,7 @@ const Deleting = async () => {
             
 
             let imgFile = stk.stocks_image?.replace(/^uploads[\\/]/, "");
-let urlimg = 'http://localhost:3001/uploads/' + imgFile;
+let urlimg = url+'/uploads/' + imgFile;
 
 
               return(

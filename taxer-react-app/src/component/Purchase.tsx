@@ -42,7 +42,7 @@ const cancelModal=()=>{
     <div className="contra-container">
       <h1>Purchase</h1>
       <p>This is the Contra Purchase.</p>
-        <a className="default-btn" onClick={showModal}>Add Payment</a>
+        <a className="default-btn" onClick={showModal}>Add Purchase</a>
 
         {pmodal &&(
         <div className="modal-overlay">

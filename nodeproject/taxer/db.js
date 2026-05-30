@@ -8,10 +8,10 @@ const mysql = require("mysql2");
 // });
 
 const db = mysql.createConnection({
-  host: "db.fr-pari1.bengt.wasmernet.com",
-  user: "user_542eed61",
-  password: "pw_28439db9",
-  database: "dbYxy8VbuUDQmdA53q6Vhac8"
+  host: "sql12.freesqldatabase.com",
+  user: "sql12828730",
+  password: "AMnpCaxEMU",
+  database: "sql12828730"
 });
 
 db.connect((err) => {

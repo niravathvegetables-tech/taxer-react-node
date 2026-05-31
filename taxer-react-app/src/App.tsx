@@ -20,6 +20,7 @@ interface FormData {
   companyTrn: string;
   companyAmount: string;
   companyID: string;
+  companyTax:number;
   
 }
 
@@ -52,13 +53,17 @@ const App: React.FC = () => {
     companyAddress: "",
     companyTrn: "",
     companyAmount: "",
-    companyID: ""
+    companyID: "",
+    companyTax:0
+     
   });
 
   const [company, setCompany] = useState<Company[]>([]);
 
 
   const [hoverTrigger, setHoverTrigger] = useState(0);
+
+   const [taxofthis, settaxofthis] = useState(0);
 
 
   const[taxarray,setTax] =useState<tax[]>([]);
@@ -108,6 +113,8 @@ useEffect(() => {
       companyTrn:     com.company_trn,
       companyAmount:  com.company_amount,
       companyAddress: com.company_address,
+      companyTax:0
+
    
     });
      
@@ -121,6 +128,8 @@ useEffect(() => {
       setCompany(data.length > 0 ? data : []);
       console.log('Company data:', data);
       setcompanyid(data[0].company_id);
+
+       settaxofthis( data[0].tax_id );
       setLoading(false);
       setShowinfo(false);
       handleEdit(data[0]);
@@ -173,10 +182,20 @@ const cancelModal=()=> {
     });
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const { name, value } = e.target;
+  setFormData({ ...formData, [name]: value });
+};
+
+
+
    const handleSubmit = async () => {
     
 try{
 
+ 
+
+console.log("logs++>"+formData);
   const response = await fetch(url+"company", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -234,12 +253,12 @@ try{
 
 
   {activeTab === "Purchase" &&
-    <Purchase companyid={companyid} />           
+    <Purchase companyid={companyid}  taxidee={taxofthis} taxarray={taxarray}     />           
     }
 
   
   {activeTab === "Sales" &&
-    <Sales />           
+    <Sales   />           
     }
 
     {activeTab === "Payment" &&
@@ -305,19 +324,25 @@ try{
 
 
 
-            <select className="taxer" name="tax" >
+            <select className="taxer" name="tax"   onChange={handleSelectChange}  >
 
             {taxarray.length &&(
 
                taxarray.map((t) => {
-
+                   
 
                   return(
                     
-                    <option value={t.tax_id}  >{t.tax_name}- {t.tax_percent}</option>
+                    <option value={t.tax_id}   selected={taxofthis === t.tax_id} >{t.tax_name}- {t.tax_percent}</option>
 
-                    )}
-              ))}
+                    )
+
+                }
+
+
+              ))
+
+          }
 
             </select>
 

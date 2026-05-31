@@ -81,7 +81,8 @@ function updateCompany(data, callback) {
       company_name    = ?,
       company_address = ?,
       company_trn     = ?,
-      company_amount  = ?
+      company_amount  = ?,
+       tax_id  = ?
     WHERE company_id = ?
   `;
   db.query(query, [
@@ -89,6 +90,7 @@ function updateCompany(data, callback) {
     data.companyAddress,
     data.companyTrn,
     data.companyAmount,
+     data.tax,
     data.companyID        // ✅ WHERE clause
   ], (err, result) => {
     if (err) return callback(err);

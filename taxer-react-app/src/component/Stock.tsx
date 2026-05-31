@@ -386,6 +386,13 @@ const Deleting = async () => {
                 onChange={handleChange}
               />
 
+              <label>Stock Unit</label>
+              <input
+                name="stocks_unit"
+                value={formData.stocks_unit}
+                onChange={handleChange}
+              />
+
               <label>Stock Total</label>
               <input
                 name="stocks_total"
@@ -393,12 +400,7 @@ const Deleting = async () => {
                 onChange={handleChange}
               />
 
-              <label>Stock Unit</label>
-              <input
-                name="stocks_unit"
-                value={formData.stocks_unit}
-                onChange={handleChange}
-              />
+              
 
               <button className="btn-submit" onClick={submitModal}>
                 Submit
@@ -440,7 +442,7 @@ const Deleting = async () => {
             
 
             let imgFile = stk.stocks_image?.replace(/^uploads[\\/]/, "");
-let urlimg = url+'/uploads/' + imgFile;
+let urlimg = url+'uploads/' + imgFile;
 
 
               return(

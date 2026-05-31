@@ -15,7 +15,10 @@ const { handlePayemntRequest,getpaymentdetailsid,getpaymentdetails,DeletePayemnt
 const { handleRecieptRequest,getRecieptdetailsid,getRecieptdetails,DeleteRecieptRequest } = require("./receipt");
 
 
+const { handleDeletePurchaseRequest,handleUpdatePurchaseRequest,handleInsertPurchaseRequest,getpurchase } = require("./purchase");
 
+
+const { getsales,handleUpdatesalesRequest,handleInsertsalesRequest,handleDeletesalesRequest } = require("./sales");
 
 createTaxerCompanyTable();
 createTaxerTaxTable();
@@ -186,6 +189,42 @@ const server = http.createServer((req, res) => {
 
     DeleteRecieptRequest(req, res);
 
+
+     } else if (req.method === "GET" && req.url === "/getpurchase") {
+
+       getpurchase(res);
+
+
+    } else if (req.method === "POST" && req.url === "/insertpurchase") {
+
+
+       handleInsertPurchaseRequest(req, res);
+
+    } else if (req.method === "POST" && req.url === "/updatepurchase") {
+
+      handleUpdatePurchaseRequest(req, res);
+
+    } else if (req.method === "POST" && req.url === "/deletepurchase") {
+
+      handleDeletePurchaseRequest(req, res);
+
+       } else if (req.method === "GET" && req.url === "/getsales") {
+
+       getsales(res);
+
+
+    } else if (req.method === "POST" && req.url === "/updatepurchase") {
+
+
+       handleUpdatesalesRequest(req, res);
+
+    } else if (req.method === "POST" && req.url === "/insertsales") {
+
+      handleInsertsalesRequest(req, res);
+
+    } else if (req.method === "POST" && req.url === "/deletesales") {
+
+      handleDeletesalesRequest(req, res);
 
   } else {
 

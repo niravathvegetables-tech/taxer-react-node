@@ -79,6 +79,9 @@ const handleRowChange = (index: number, field: keyof purchaseRows, value: any) =
   setPurchaseRows(updatedRows);
 };
 
+const DeleteRow = (index: number) => {
+  setPurchaseRows(prev => prev.filter((_, i) => i !== index));
+};
 
 
 const showModal=()=>{
@@ -252,6 +255,8 @@ function fetchTax() {
           onChange={(e) => handleRowChange(index, "purchase_total", e.target.value)}
         />
       </td>
+      <td><a onClick={(e) =>DeleteRow(index)} >Delete</a></td>
+
     </tr>
   ))}
 </tbody>

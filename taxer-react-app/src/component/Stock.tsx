@@ -26,9 +26,10 @@ interface FormData {
 
 interface StockProps {
   companyid: string | null;
+  stocks: Stock[];
 }
 
-const Stock: React.FC<StockProps> = ({ companyid }) => {
+const Stock: React.FC<StockProps> = ({ companyid,stocks }) => {
 
 const [stock, setStock] = useState<Stock[]>([]);
 
@@ -39,18 +40,25 @@ useEffect(() => {
 
 }, []); 
 
-
 function fetchStock() {
-  fetch(url + "getstock")
-    .then((res) => res.json())
-    .then((data: Stock[]) => {
-      setStock(data.length > 0 ? data : []);
-      console.log("Stock data:", data);
-    })
-    .catch(() => {
-      // handle error
-    });
+
+
+  setStock(stocks);
+
 }
+
+
+// function fetchStock() {
+//   fetch(url + "getstock")
+//     .then((res) => res.json())
+//     .then((data: Stock[]) => {
+//       setStock(data.length > 0 ? data : []);
+//       console.log("Stock data:", data);
+//     })
+//     .catch(() => {
+//       // handle error
+//     });
+// }
 
 
    const videoRef = useRef<HTMLVideoElement>(null);

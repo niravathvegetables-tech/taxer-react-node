@@ -46,6 +46,17 @@ interface tax{
   
 }
 
+  interface StockItem{
+
+    stocks_id : string,
+    stocks_name : string,
+    stocks_price : string,
+    stocks_total : string,
+    stocks_unit : string,
+    stocks_image : string
+
+  }
+
 const App: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
@@ -60,6 +71,7 @@ const App: React.FC = () => {
 
   const [company, setCompany] = useState<Company[]>([]);
 
+const [stock, setStock] = useState<StockItem[]>([]);
 
   const [hoverTrigger, setHoverTrigger] = useState(0);
 
@@ -101,8 +113,22 @@ useEffect(() => {
   fetchCompany();
 
   fetchTax();
-
+fetchStock();
 }, []); 
+
+
+function fetchStock() {
+  fetch(url + "getstock")
+    .then((res) => res.json())
+    .then((data: StockItem[]) => {
+      setStock(data.length > 0 ? data : []);
+      console.log("Stock data:", data);
+    })
+    .catch(() => {
+      // handle error
+    });
+}
+
 
 
   function handleEdit(com: Company) {
@@ -248,12 +274,12 @@ console.log("logs++>"+formData);
 
 
     {activeTab === "Stock" &&
-    <Stock companyid={companyid} />           
+    <Stock companyid={companyid} stocks={stock}   />           
     }
 
 
   {activeTab === "Purchase" &&
-    <Purchase companyid={companyid}  taxidee={taxofthis} taxarray={taxarray}     />           
+    <Purchase companyid={companyid} stocks={stock}  taxidee={taxofthis} taxarray={taxarray}     />           
     }
 
   

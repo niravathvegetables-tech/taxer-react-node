@@ -6,11 +6,21 @@ interface PurchaseProps {
   companyid: string | null;
    taxidee: number | null;
    taxarray: Tax[]; 
+   stocks: Stock[];
 
     
 }
 
+interface Stock{
 
+    stocks_id : string,
+    stocks_name : string,
+    stocks_price : string,
+    stocks_total : string,
+    stocks_unit : string,
+    stocks_image : string
+
+  }
  
 interface FormData {
  
@@ -37,7 +47,7 @@ interface FormData {
   }
 
 
-const Purchase: React.FC<PurchaseProps> = ({ companyid,taxidee,taxarray }) => {
+const Purchase: React.FC<PurchaseProps> = ({ companyid,taxidee,taxarray,stocks }) => {
 
 const [pmodal,Setpmodal]=useState<boolean>(false);
 
@@ -56,7 +66,7 @@ const [formData, setFormData] = useState<FormData>({
 
 
 const [purchaseRows, setPurchaseRows] = useState<purchaseRows[]>([]);   // ✅ rows state
-const [stocks, setStocks] = useState<any[]>([]);                        // ✅ consistent naming
+                         
 
 // Add row handler
 const addRow = () => {

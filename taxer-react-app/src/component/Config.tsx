@@ -1,4 +1,4 @@
 import React  from 'react';
 
-const url = `http://localhost:3001/`;
+const url = `https://taxer-react-node-barg.onrender.com/`;
 export default url;

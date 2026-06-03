@@ -1,3 +1,44 @@
+.btn-cancel{
+
+ border-radius: 23px; 
+   height:27px;
+   width:200px;
+  margin-left: 10px;
+}
+
+.table-input{
+    border-radius: 19px !important;
+    width: 120px !important;
+
+
+}
+
+.m-delete{
+  display: block;
+     border-radius: 19px !important;
+    width: 63px;
+    background: red;
+     cursor: pointer;
+     color:white;
+
+}
+
+.taxer{
+
+   border-radius: 23px; 
+   height:27px;
+   width:211px;
+  margin-left: 10px;
+}
+
+
+.companyinputs{
+border-radius: 23px; 
+
+   width:225px;
+
+}
+
 .App {
   text-align: center;
 }
@@ -159,7 +200,7 @@
   background-color: #13f4b3;
   padding: 30px;
   border-radius: 8px;
-  width: 600px;
+  width: 893px;
   height: 71%;
   display: flex;
   flex-direction: column;
@@ -208,7 +249,7 @@
 
 .head{
  position: absolute;
-    left: 25%;
+    left: 2%;
 
   }
 
@@ -266,7 +307,12 @@
 /* Hidden by default on mobile */
 @media screen and (max-width: 480px) {
 
-
+    .modal-box {
+        height: 400px;
+        position: absolute;
+        top: 55px;
+        width: 230px;
+    }
 
   .head.openactive{
 
@@ -369,7 +415,12 @@
 
 
 
-
+ .modal-box {
+        height: 400px;
+        position: absolute;
+        top: 55px;
+        width: 230px;
+    }
 
 
 
@@ -480,7 +531,13 @@
 
 @media screen and (min-width:601px) and (max-width:900px) {
 
-
+     .modal-box {
+        height: 400px;
+        position: absolute;
+        top: 55px;
+        width: 230px;
+        left: 115px;
+    }
 
   .head.openactive{
 
@@ -582,6 +639,16 @@
 
 
 @media screen and (min-width:901px) and (max-width:1200px) { 
+
+   .modal-box {
+        height: 400px;
+        position: absolute;
+        top: 55px;
+        width: 230px;
+        left: 250px;
+    }
+
+
   .head.openactive{
 
     background: #86daa4;

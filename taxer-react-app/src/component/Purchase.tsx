@@ -237,6 +237,7 @@ function fetchTax() {
       <td>
         <input
           type="text"
+          className="table-input"
           value={row.purchase_amount ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_amount", e.target.value)}
         />
@@ -245,6 +246,7 @@ function fetchTax() {
       <td>
         <input
           type="text"
+          className="table-input"
           value={row.purchase_count ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_count", e.target.value)}
         />
@@ -253,6 +255,7 @@ function fetchTax() {
       <td>
         <input
           type="text"
+          className="table-input"
           value={row.purchase_item_type ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_item_type", e.target.value)}
         />
@@ -261,11 +264,12 @@ function fetchTax() {
       <td>
         <input
           type="text"
+          className="table-input"
           value={row.purchase_total ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_total", e.target.value)}
         />
       </td>
-      <td><a onClick={(e) =>DeleteRow(index)} >Delete</a></td>
+      <td><a className="m-delete" onClick={(e) =>DeleteRow(index)} >Delete</a></td>
 
     </tr>
   ))}

@@ -21,6 +21,9 @@ interface Stock{
     stocks_image : string
 
   }
+
+
+
  
 interface FormData {
  
@@ -51,7 +54,7 @@ const Purchase: React.FC<PurchaseProps> = ({ companyid,taxidee,taxarray,stocks }
 
 const [pmodal,Setpmodal]=useState<boolean>(false);
 
-const [stock,setStock]=useState([]);
+const [stock,setStock]=useState<Stock[]>([]);
 
 const [date, setDate] = useState<string>(
   new Date().toISOString().split("T")[0]
@@ -82,12 +85,33 @@ const addRow = () => {
   ]);
 };
 
-// Handle row changes
+ 
+ 
+
+
 const handleRowChange = (index: number, field: keyof purchaseRows, value: any) => {
   const updatedRows = [...purchaseRows];
   updatedRows[index][field] = value;
+
+  if (field === "purchase_count") {
+    const amount = Number(updatedRows[index]["purchase_amount"]) || 0;
+    const count = Number(value) || 0;   // use value, not r
+    updatedRows[index]["purchase_total"] = String(amount * count);
+  }
+
+  if (field === "stocks_id" && value != null) {
+    const price = stocks.find((item) => Number(item.stocks_id) === Number(value))?.stocks_price ?? "N/A";
+    updatedRows[index]["purchase_amount"] = String(price);
+
+    const count = Number(updatedRows[index]["purchase_count"]) || 0; // use purchase_count
+    const amount = Number(price) || 0;
+    updatedRows[index]["purchase_total"] = String(amount * count);
+  }
+
   setPurchaseRows(updatedRows);
 };
+
+
 
 const DeleteRow = (index: number) => {
   setPurchaseRows(prev => prev.filter((_, i) => i !== index));
@@ -137,6 +161,43 @@ function fetchTax() {
       [name]: value
     });
   };
+
+
+
+
+  const SubmitPurchase = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+
+  let p = "insertpurchase";
+  let endpoint = url + p;
+
+  console.log("formData=", formData);
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...formData,
+        rows: purchaseRows,
+        tax_id: taxidee
+      }),
+    });
+
+    const result = await response.json();
+    console.log("Server response:", result);
+
+    // reset states
+    setFormData({
+      company_id: companyid ?? "",
+      tax_id: taxidee,
+      date: new Date().toISOString().split("T")[0],
+    });
+    setPurchaseRows([]);
+  } catch (err) {
+    console.error("Error submitting purchase:", err);
+  }
+};
 
 
 
@@ -227,7 +288,7 @@ function fetchTax() {
             {stocks.length === 0 ? "Loading..." : "Select Stock"}
           </option>
           {stocks.map((stock) => (
-            <option key={stock.stocks_id} value={stock.stocks_id}>
+            <option key={stock.stocks_id} value={stock.stocks_id}   >
               {stock.stocks_name} (Avail: {stock.stocks_total} {stock.stocks_unit} / Price: {stock.stocks_price})
             </option>
           ))}
@@ -238,6 +299,7 @@ function fetchTax() {
         <input
           type="text"
           className="table-input"
+          placeholder="Enter"
           value={row.purchase_amount ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_amount", e.target.value)}
         />
@@ -246,6 +308,7 @@ function fetchTax() {
       <td>
         <input
           type="text"
+           placeholder="Enter"
           className="table-input"
           value={row.purchase_count ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_count", e.target.value)}
@@ -255,6 +318,7 @@ function fetchTax() {
       <td>
         <input
           type="text"
+           placeholder="Enter"
           className="table-input"
           value={row.purchase_item_type ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_item_type", e.target.value)}
@@ -264,6 +328,7 @@ function fetchTax() {
       <td>
         <input
           type="text"
+           placeholder="Enter"
           className="table-input"
           value={row.purchase_total ?? ""}
           onChange={(e) => handleRowChange(index, "purchase_total", e.target.value)}
@@ -281,11 +346,9 @@ function fetchTax() {
               </div>
 
 
-
+               <button className="btn-submit" onClick={SubmitPurchase} > Submit  </button>
               
-              <button className="btn-cancel" onClick={cancelModal}>
-                  Cancel
-                </button>
+              <button className="btn-cancel" onClick={cancelModal} >  Cancel  </button>
 
             </div>
           </div>

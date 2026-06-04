@@ -90,6 +90,15 @@ const [stat, setStat] = useState(0);
 
   setStat(prev => prev + 1);
 
+   setFormData({
+
+
+    tax_name: "",
+  tax_percent: "",
+  tax_id:""
+
+  });
+
   return data;
 });
 console.log("Server response:", result);

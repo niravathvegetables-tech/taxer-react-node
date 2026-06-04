@@ -159,7 +159,13 @@ try{
 
    setshowcontra(prev => prev + 1);
 
- 
+  setFormData({
+         company_id: companyid ?? "",
+  contra_name: "",
+  contra_amount: "",
+  contra_date: new Date().toISOString().split("T")[0],
+  contra_id: ""
+});
 
 
   return data;

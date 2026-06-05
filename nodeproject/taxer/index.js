@@ -213,7 +213,7 @@ const server = http.createServer((req, res) => {
        getsales(res);
 
 
-    } else if (req.method === "POST" && req.url === "/updatepurchase") {
+    } else if (req.method === "POST" && req.url === "/updatesales") {
 
 
        handleUpdatesalesRequest(req, res);

@@ -198,7 +198,14 @@ const server = http.createServer((req, res) => {
     } else if (req.method === "POST" && req.url === "/insertpurchase") {
 
 
-       handleInsertPurchaseRequest(req, res);
+     try {
+  handleInsertPurchaseRequest(req, res);
+} catch (err) {
+  console.error("Error in insertpurchase:", err);
+  res.statusCode = 500;
+  res.end("Internal Server Error");
+}
+
 
     } else if (req.method === "POST" && req.url === "/updatepurchase") {
 

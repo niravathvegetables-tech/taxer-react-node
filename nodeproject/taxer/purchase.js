@@ -18,28 +18,6 @@ function handleUpdatePurchaseRequest(req, res) {
 }
 
 
-function insertPurchase(data, callback) {
-  // const query = `
-  //   INSERT INTO : taxer_purchase 
-  //   (transaction_id, stocks_id,	purchase_amount,purchase_count,purchase_item_type,purchase_total,date)
-  //   VALUES (?, ?, ?, ?)
-  // `;
-  // db.query(query, [
-  //   data.company_id,
-  //   data.receipt_name,
-  //    data.receipt_amount,
-  //     data.receipt_date
-  // ], (err, result) => {
-  //   if (err) return callback(err);
-  //   callback(null, result);
-  // });
-
- 
-
-}
-
-
-
 function handleInsertPurchaseRequest(req, res) {
   let body = "";
   req.on("data", chunk => { body += chunk.toString(); });
@@ -66,6 +44,32 @@ function handleInsertPurchaseRequest(req, res) {
     }
   });
 }
+
+function insertPurchase(data, callback) {
+  // Loop through rows and insert each purchase
+  const query = `
+    INSERT INTO taxer_purchase 
+    (transaction_id, stocks_id, purchase_amount, purchase_count, purchase_item_type, purchase_total, date)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  // If you want to insert multiple rows, run multiple queries
+  data.rows.forEach(row => {
+    db.query(query, [
+      data.company_id,          // transaction_id (assuming company_id maps here)
+      row.stocks_id,
+      row.purchase_amount,
+      row.purchase_count,
+      row.purchase_item_type,
+      row.purchase_total,
+      data.date
+    ], (err, result) => {
+      if (err) return callback(err);
+      callback(null, result);
+    });
+  });
+}
+
 
 
 

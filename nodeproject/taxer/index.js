@@ -197,7 +197,7 @@ const server = http.createServer((req, res) => {
 
     } else if (req.method === "POST" && req.url === "/insertpurchase") {
 
-
+console.log("here");
      try {
   handleInsertPurchaseRequest(req, res);
 } catch (err) {

@@ -30,3 +30,6 @@ function handleDeletePurchaseRequest(req, res) {
 
 
 }
+
+
+module.exports = { handleDeletePurchaseRequest,handleInsertPurchaseRequest,handleUpdatePurchaseRequest,getpurchase };

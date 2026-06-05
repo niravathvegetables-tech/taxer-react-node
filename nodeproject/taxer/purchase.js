@@ -20,7 +20,7 @@ function handleUpdatePurchaseRequest(req, res) {
 
 function handleInsertPurchaseRequest(req, res) {
 
-
+console.log("comes");
 
 }
 

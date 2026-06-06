@@ -17,6 +17,7 @@ interface FormData {
   payment_name: string;
   payment_amount: string;
   payment_date: string;
+   company_id: string;
    
 
   }
@@ -150,7 +151,7 @@ const Delete = async (py: Payments) => {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ payment_id: py.payment_id })
+      body: JSON.stringify({ payment_id: py.payment_id,company_id : py.company_id, payment_amount : py.payment_amount })
     });
 
     if (!response.ok) {

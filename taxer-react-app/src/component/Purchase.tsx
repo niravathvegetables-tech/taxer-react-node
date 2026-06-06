@@ -50,6 +50,20 @@ interface FormData {
   }
 
 
+   interface Purchase{
+
+    stocks_id:number | null;
+    purchase_amount:string | null;
+    purchase_count:string | null;
+    purchase_id: number; 
+    purchase_item_type:string | null;
+    purchase_total:string | null;
+    date:string | null;
+    transaction_id:number; 
+
+  }
+
+
 const Purchase: React.FC<PurchaseProps> = ({ companyid,taxidee,taxarray,stocks }) => {
 
 const [pmodal,Setpmodal]=useState<boolean>(false);
@@ -69,6 +83,8 @@ const [formData, setFormData] = useState<FormData>({
 
 
 const [purchaseRows, setPurchaseRows] = useState<purchaseRows[]>([]);   // ✅ rows state
+
+  const [Purchase, setPurchase] = useState<Purchase[]>([]);
                          
 
 // Add row handler
@@ -85,8 +101,30 @@ const addRow = () => {
   ]);
 };
 
+ useEffect(() => {
+
+
+
+  fetchPurchase();
+
+  
+
+}, []); 
  
- 
+ function fetchPurchase() {
+
+  fetch(url + "getpurchase")
+    .then((res) => res.json())
+    .then((data: Purchase[]) => {
+
+       setPurchase(data.length > 0 ? data : []);
+      
+      console.log("getpurchase data:", data);
+    })
+    .catch(() => {
+      // handle error
+    });
+}
 
 
 const handleRowChange = (index: number, field: keyof purchaseRows, value: any) => {
@@ -207,6 +245,66 @@ function fetchTax() {
       <h1>Purchase</h1>
       <p>This is the Contra Purchase.</p>
         <a className="default-btn" onClick={showModal}>Add Purchase</a>
+
+
+
+
+
+
+
+
+ {Purchase &&(
+
+  <div className="resulttable">
+
+         <table>
+          <thead>
+            <tr>
+              <th>Purchase ID </th>
+              <th>Item Name</th>
+              <th>Item Quantity</th>  
+              <th>Purchase Amount </th> 
+              <th>Purchase Date</th>        
+              
+            </tr>
+          </thead>
+          <tbody>
+
+     {Purchase.map((pu) => {
+  const stockRow = stocks.find(st => Number(st.stocks_id) === Number(pu.stocks_id));
+
+  return (
+    <tr key={pu.purchase_id}>
+      <td>{pu.purchase_id}</td>
+      <td>{stockRow?.stocks_name ?? "Unknown"}</td>
+      <td>{pu.purchase_count}</td>
+      <td>{pu.purchase_amount}</td>
+      <td>{pu.date}</td>
+    </tr>
+  );
+})}
+
+      </tbody>
+          </table>
+
+          </div>
+
+  )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {pmodal &&(
         <div className="modal-overlay">

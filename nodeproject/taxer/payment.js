@@ -1,7 +1,7 @@
 const db = require("./db");
  const path = require("path");
 
- 
+  const { updateamountadd,updateamountreduce } = require("./company");
 
 function getpaymentdetailsid(res) {
   db.query("SELECT * FROM taxer_payment", (err, rows) => {
@@ -74,16 +74,62 @@ function handlePayemntRequest(req, res) {
       console.log("Received data:", data);
 
       if (data.payment_id && data.payment_id !== "") {
-        updatePayment(data, (err, result) => {
-          if (err) {
-            console.error("DB Update Error:", err);
+
+
+          db.query("SELECT payment_amount FROM taxer_payment WHERE  payment_id  = ?", [data.payment_id ], (err, rows) => {
+
+
+
+             if (err) {
             res.statusCode = 500;
-            res.end(JSON.stringify({ error: "Error updating data" }));
-            return;
+            return res.end(JSON.stringify({ error: "Error fetching old payment" }));
           }
-          res.setHeader("Content-Type", "application/json");
-          res.end(JSON.stringify({ success: true, updated: true, id: data.payment_id }));
-        });
+          if (rows.length === 0) {
+            res.statusCode = 404;
+            return res.end(JSON.stringify({ error: "Payment not found" }));
+          }
+
+          const oldAmount = parseFloat(rows[0].payment_amount);
+          const newAmount = parseFloat(data.payment_amount);
+
+          if (isNaN(oldAmount) || isNaN(newAmount)) {
+            res.statusCode = 400;
+            return res.end(JSON.stringify({ error: "Invalid numeric values" }));
+          }
+
+          // Step 2: Compare difference
+          const difference = newAmount - oldAmount;
+          if (difference > 0) {
+             updateamountreduce(Math.abs(difference), data.company_id);
+           
+          } else if (difference < 0) {
+              updateamountadd(Math.abs(difference), data.company_id);
+          }
+
+
+
+
+
+
+              updatePayment(data, (err, result) => {
+                if (err) {
+                  console.error("DB Update Error:", err);
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ error: "Error updating data" }));
+                  return;
+                }
+                res.setHeader("Content-Type", "application/json");
+                res.end(JSON.stringify({ success: true, updated: true, id: data.payment_id }));
+              });
+
+
+
+
+
+
+      });
+
+
       } else {
         insertPayment(data, (err, result) => {
           if (err) {
@@ -92,6 +138,11 @@ function handlePayemntRequest(req, res) {
             res.end(JSON.stringify({ error: "Error inserting data" }));
             return;
           }
+
+          updateamountreduce(parseFloat(data.payment_amount), data.company_id);
+
+
+
           res.setHeader("Content-Type", "application/json");
           res.end(JSON.stringify({ success: true, id: result.insertId }));
         });
@@ -143,6 +194,7 @@ function DeletePayemntRequest(req, res){
 
          console.log("Deltete Data data:", data);
 
+          updateamountadd(parseFloat(data.payment_amount), data.company_id);
 
          res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");

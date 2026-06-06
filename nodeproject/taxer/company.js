@@ -27,7 +27,7 @@ async function updateamountadd(amount, company_id) {
 
       if (rows.length === 0) return reject(new Error("Company not found"));
 
-      let resultamnt = parseFloat(rows[0].company_amount) - parseFloat(amount);
+      let resultamnt = parseFloat(rows[0].company_amount) + parseFloat(amount);
       console.log("Updated amount:", resultamnt);
 
       const query = `
@@ -56,7 +56,7 @@ async function updateamountreduce(amount,company_id){
 
       if (rows.length === 0) return reject(new Error("Company not found"));
 
-      let resultamnt = parseFloat(rows[0].company_amount) + parseFloat(amount);
+      let resultamnt = parseFloat(rows[0].company_amount) - parseFloat(amount);
       console.log("Updated amount:", resultamnt);
 
       const query = `

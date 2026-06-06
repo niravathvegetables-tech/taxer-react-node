@@ -4,7 +4,15 @@ const db = require("./db");
 
 function getpurchase(res){
 
-
+db.query("SELECT * FROM taxer_purchase", (err, rows) => {
+    if (err) {
+      res.statusCode = 500;
+      res.end(JSON.stringify({ error: "Error fetching data" }));
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(rows));
+  });
 
 }
 

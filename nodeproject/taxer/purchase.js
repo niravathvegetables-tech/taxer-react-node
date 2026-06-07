@@ -1,6 +1,8 @@
 const db = require("./db");
  const path = require("path");
 
+  const { updateamountadd,updateamountreduce } = require("./company");
+
 
 function getpurchase(res){
 
@@ -80,6 +82,9 @@ function insertPurchase(data, callback) {
       }
       completed++;
       if (completed === data.rows.length) {
+
+         updateamountreduce(row.purchase_total, data.company_id);
+        
         callback(null, { insertId: result.insertId });
       }
     });

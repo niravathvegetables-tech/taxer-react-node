@@ -17,7 +17,7 @@ function insertContra(data, callback) {
     callback(null, result);
   });
 
-updateamountadd(data.contra_amount,data.company_id);
+updateamountreduce(data.contra_amount,data.company_id);
 
 }
 
@@ -48,7 +48,7 @@ async function deleteContraRequest(req, res) {
 
         const currentAmount = parseFloat(rows[0].contra_amount);
 
-        updateamountreduce(currentAmount,rows[0].company_id);
+        updateamountadd(currentAmount,rows[0].company_id);
 
          const query = "DELETE FROM taxer_contra WHERE contra_id = ?";
     db.query(query, [rows[0].contra_id], (err, result) => {

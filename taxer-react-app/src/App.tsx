@@ -284,7 +284,7 @@ console.log("logs++>"+formData);
 
   
   {activeTab === "Sales" &&
-    <Sales   />           
+    <Sales companyid={companyid}  stocks={stock}  taxidee={taxofthis} taxarray={taxarray} />           
     }
 
     {activeTab === "Payment" &&

@@ -23,6 +23,12 @@
 
 }
 
+.resulttable{
+
+  max-height: 324px;
+    overflow: auto;
+}
+
 .taxer{
 
    border-radius: 23px; 
@@ -167,7 +173,7 @@ border-radius: 23px;
   position: absolute;
     z-index: 99999;
     left: 70%;
-    bottom: 5%;
+    bottom: 55%;
 }
 
 
@@ -318,6 +324,7 @@ border-radius: 23px;
 
     background: #86daa4;
     width: 280px;
+    opacity: 0.6;
   }
 
   .mob-menu{display: block;}
@@ -430,6 +437,7 @@ border-radius: 23px;
 
     background: #86daa4;
     width: 280px;
+    opacity: 0.6;
   }
 
   .mob-menu{display: block;}
@@ -543,6 +551,7 @@ border-radius: 23px;
 
     background: #86daa4;
     width: 280px;
+    opacity: 0.6;
   }
 
   .mob-menu{display: block;}
@@ -653,6 +662,7 @@ border-radius: 23px;
 
     background: #86daa4;
     width: 280px;
+    opacity: 0.6;
   }
 
   .mob-menu{display: block;}

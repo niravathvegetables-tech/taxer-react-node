@@ -21,6 +21,7 @@ interface FormData {
   receipt_name: string;
   receipt_amount: string;
   receipt_date: string;
+  company_id: string;
    
 
   }
@@ -157,7 +158,7 @@ const Delete = async (re: Receipts) => {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ receipt_id: re.receipt_id })
+      body: JSON.stringify({ receipt_id: re.receipt_id ,company_id : re.company_id, receipt_amount : re.receipt_amount })
     });
 
     if (!response.ok) {

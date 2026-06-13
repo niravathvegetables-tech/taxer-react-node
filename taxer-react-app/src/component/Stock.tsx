@@ -24,6 +24,10 @@ interface FormData {
   }
 
 
+
+ 
+
+
 interface StockProps {
   companyid: string | null;
   stocks: Stock[];
@@ -32,6 +36,8 @@ interface StockProps {
 const Stock: React.FC<StockProps> = ({ companyid,stocks }) => {
 
 const [stock, setStock] = useState<Stock[]>([]);
+
+ 
 
 useEffect(() => {
   fetchStock();
@@ -452,6 +458,7 @@ const Deleting = async () => {
             let imgFile = stk.stocks_image?.replace(/^uploads[\\/]/, "");
 let urlimg = url+'uploads/' + imgFile;
 
+ 
 
               return(
 
@@ -459,7 +466,10 @@ let urlimg = url+'uploads/' + imgFile;
                    <td>{stk.stocks_name}</td>
                    <td>{stk.stocks_price}</td>
                    <td>{stk.stocks_total}-{stk.stocks_unit}</td>
-                   <td><img src={urlimg} width="250px" height="150px"/></td>
+                   <td>{imgFile
+          ? <img src={urlimg} width="250px" height="150px" alt="stock" />
+          : "No image"
+        }</td>
                   <td><a onClick={() => Edit(stk)}>Edit</a></td>
                   <td><a onClick={() => Delete(stk)}>Delete</a></td>
                    </tr>

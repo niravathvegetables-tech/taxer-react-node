@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 function handleStockRequest(req, res) {
+
   upload.single("stocks_image")(req, res, function (err) {
     if (err) {
       console.error("Upload error:", err);
@@ -40,8 +41,12 @@ function handleStockRequest(req, res) {
     const data = req.body;
     const file = req.file;
 
-    if (data.stocks_id && data.stocks_id !== "") {
-      updateStock({ ...data, stocks_image: file?.filename }, (err, result) => {
+   
+ 
+
+
+   if (data.stocks_id && data.stocks_id !== "") {
+      updateStock({ ...data, stocks_image: file?.filename ?? 'null' }, (err, result) => {
         if (err) {
           res.writeHead(500, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ error: "Error updating stock" }));
@@ -51,7 +56,7 @@ function handleStockRequest(req, res) {
         res.end(JSON.stringify({ success: true, updated: true }));
       });
     } else {
-      insertStock({ ...data, stocks_image: file?.filename }, (err, result) => {
+      insertStock({ ...data, stocks_image: file?.filename ?? 'null' }, (err, result) => {
         if (err) {
           console.error("DB Insert Error:", err);
           res.writeHead(500, { "Content-Type": "application/json" });
@@ -62,7 +67,12 @@ function handleStockRequest(req, res) {
         res.end(JSON.stringify({ success: true, id: result.insertId }));
       });
     }
-  });
+
+
+ });
+
+
+
 }
 
 

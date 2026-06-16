@@ -29,7 +29,7 @@ interface FormData {
  
   company_id: string;
   tax_id:number | null;
-  date:string | null;
+  date:string;
 }
 
    interface Tax {
@@ -344,7 +344,7 @@ function fetchTax() {
                 name="date"
                 type="date"
                 className="table-input"
-                value={date}
+                value={formData.date}
                 onChange={handleChange}
               />
 

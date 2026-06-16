@@ -32,7 +32,7 @@ interface Stock{
  
   company_id: string;
   tax_id:number | null;
-  date:string | null;
+  date:string;
 }
 
 
@@ -46,8 +46,9 @@ const Sales: React.FC<SalesProps> = ({companyid,taxidee,taxarray,stocks}) => {
   date: new Date().toISOString().split("T")[0], // ✅ added
 });
 
-
-
+const [date, setDate] = useState<string>(
+  new Date().toISOString().split("T")[0]
+);
 const [showModal, SetshowModal]=useState<boolean>(false);
 
 const handleShowModal = () => {
@@ -60,6 +61,35 @@ const cancelModal = () =>{
    SetshowModal(false);
 };
 
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+ const [tax, setTax] = useState<Tax[]>([]);
+
+  useEffect(() => {
+  fetchTax(); 
+
+}, []);
+
+
+function fetchTax() {
+  fetch(url + "gettax")
+    .then((res) => res.json())
+    .then((data: Tax[]) => {
+      setTax(data.length > 0 ? data : []);
+      console.log("fetchTax data:", data);
+    })
+    .catch(() => {
+      // handle error
+    });
+}
 
   return (
     <div className="contra-container">
@@ -81,6 +111,31 @@ const cancelModal = () =>{
 
                <label>Tax</label>
 
+
+               <select className="taxer" name="tax" >
+
+            {tax.length &&(
+
+               tax.map((t) => {
+
+
+                  return(
+                    
+                    <option value={t.tax_id ?? ""}  selected={taxidee === t.tax_id} >{t.tax_name}- {t.tax_percent}</option>
+
+                    )}
+              ))}
+
+            </select>
+
+             <label>Date</label>
+              <input
+                name="date"
+                type="date"
+                className="table-input"
+                value={formData.date}
+                onChange={handleChange}
+              />
                
 
                 <button className="btn-submit"  > Submit  </button>
@@ -90,7 +145,7 @@ const cancelModal = () =>{
             </div>
             </div>
 
-        )};
+        )}
 
     </div>
   );

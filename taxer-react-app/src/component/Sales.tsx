@@ -36,9 +36,24 @@ interface Stock{
 }
 
 
+interface salesRows{
+
+    stocks_id:number | null;
+    sales_amount:string | null;
+    sales_count:string | null;
+
+    sales_item_type:string | null;
+    sales_total:string | null;
+
+  }
+
+
 
 
 const Sales: React.FC<SalesProps> = ({companyid,taxidee,taxarray,stocks}) => {
+
+
+  const [salesRows, setsalesRows] = useState<salesRows[]>([]); 
 
   const [formData, setFormData] = useState<FormData>({
   company_id: companyid ?? "",
@@ -61,6 +76,50 @@ const cancelModal = () =>{
    SetshowModal(false);
 };
 
+
+const addRow = () => {
+  setsalesRows([
+    ...salesRows,
+    {
+      stocks_id: null,
+      sales_amount: "",
+      sales_count: "",
+      sales_item_type: "",
+      sales_total: "",
+    },
+  ]);
+};
+
+
+const handleRowChange = (index: number, field: keyof salesRows, value: any) => {
+  const updatedRows = [...salesRows];
+  updatedRows[index][field] = value;
+
+  if (field === "sales_count") {
+    const amount = Number(updatedRows[index]["sales_amount"]) || 0;
+    const count = Number(value) || 0;   // use value, not r
+    updatedRows[index]["sales_total"] = String(amount * count);
+  }
+
+  if (field === "stocks_id" && value != null) {
+    const price = stocks.find((item) => Number(item.stocks_id) === Number(value))?.stocks_price ?? "N/A";
+    updatedRows[index]["sales_amount"] = String(price);
+
+    const count = Number(updatedRows[index]["sales_count"]) || 0; // use purchase_count
+    const amount = Number(price) || 0;
+    updatedRows[index]["sales_total"] = String(amount * count);
+  }
+
+  setsalesRows(updatedRows);
+};
+
+
+
+
+
+const DeleteRow = (index: number) => {
+  setsalesRows(prev => prev.filter((_, i) => i !== index));
+};
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,6 +195,102 @@ function fetchTax() {
                 value={formData.date}
                 onChange={handleChange}
               />
+
+
+               <div className="purchase-table-wrapper">
+              <table className="purchase-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Stock Item</th>
+                      <th>Sales Price</th>
+                      <th>Sales Count</th>
+                      <th>Sales Unit</th>
+                      <th>Sales Item Total</th>
+                      <th>
+                        <button
+                          type="button"
+                          className="btn-icon btn-add-row"
+                            onClick={addRow}
+                          title="Add row"
+                        >
+                          +
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                 <tbody>
+  {salesRows.map((row, index) => (
+    <tr key={index}>
+      <td>{index + 1}</td>
+
+      <td>
+        <select
+          name="stocks_id"
+          className="table-input"
+          value={row.stocks_id ?? ""}
+          onChange={(e) => handleRowChange(index, "stocks_id", Number(e.target.value))}
+        >
+          <option value="">
+            {stocks.length === 0 ? "Loading..." : "Select Stock"}
+          </option>
+          {stocks.map((stock) => (
+            <option key={stock.stocks_id} value={stock.stocks_id}   >
+              {stock.stocks_name} (Avail: {stock.stocks_total} {stock.stocks_unit} / Price: {stock.stocks_price})
+            </option>
+          ))}
+        </select>
+      </td>
+
+      <td>
+        <input
+          type="text"
+          className="table-input"
+          placeholder="Enter"
+          value={row.sales_amount ?? ""}
+          onChange={(e) => handleRowChange(index, "sales_amount", e.target.value)}
+        />
+      </td>
+
+      <td>
+        <input
+          type="text"
+           placeholder="Enter"
+          className="table-input"
+          value={row.sales_count ?? ""}
+          onChange={(e) => handleRowChange(index, "sales_count", e.target.value)}
+        />
+      </td>
+
+      <td>
+        <input
+          type="text"
+           placeholder="Enter"
+          className="table-input"
+          value={row.sales_item_type ?? ""}
+          onChange={(e) => handleRowChange(index, "sales_item_type", e.target.value)}
+        />
+      </td>
+
+      <td>
+        <input
+          type="text"
+           placeholder="Enter"
+          className="table-input"
+          value={row.sales_total ?? ""}
+          onChange={(e) => handleRowChange(index, "sales_total", e.target.value)}
+        />
+      </td>
+      <td><a className="m-delete" onClick={(e) =>DeleteRow(index)} >Delete</a></td>
+
+    </tr>
+  ))}
+</tbody>
+
+                  </table>
+
+
+              </div>
                
 
                 <button className="btn-submit"  > Submit  </button>

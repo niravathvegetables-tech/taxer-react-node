@@ -50,6 +50,8 @@ interface salesRows{
 
 
 
+
+
 const Sales: React.FC<SalesProps> = ({companyid,taxidee,taxarray,stocks}) => {
 
 
@@ -114,7 +116,31 @@ const handleRowChange = (index: number, field: keyof salesRows, value: any) => {
 };
 
 
+const SubmitModal =async ()=>{
 
+
+let data = {};
+  data = { sales:salesRows, companyid : companyid, taxidee : taxidee , date: date  };
+ 
+
+ console.log(data);
+  let p = "insertsales";
+  let endpoint = url + p;
+
+ try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+
+    } catch (err) {
+    console.error("Error submitting purchase:", err);
+  }
+
+
+}
 
 
 const DeleteRow = (index: number) => {
@@ -163,6 +189,9 @@ function fetchTax() {
           <div className="modal-box modalpos">
                <label>Company Id</label>
               <input
+
+              className="table-input"
+
                 name="company_id"
                 value={formData.company_id}
                 readOnly
@@ -171,7 +200,7 @@ function fetchTax() {
                <label>Tax</label>
 
 
-               <select className="taxer" name="tax" >
+               <select className="taxer sltx" name="tax" >
 
             {tax.length &&(
 
@@ -197,17 +226,17 @@ function fetchTax() {
               />
 
 
-               <div className="purchase-table-wrapper">
-              <table className="purchase-table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Stock Item</th>
-                      <th>Sales Price</th>
-                      <th>Sales Count</th>
-                      <th>Sales Unit</th>
-                      <th>Sales Item Total</th>
-                      <th>
+               <div className="sales-table-wrapper">
+              <div className="sales-table">
+                  <div className="outerhead">
+                    <div className="outerheadin">
+                      <div className="subhead">#</div>
+                      <div className="subhead">Stock Item</div>
+                      <div className="subhead">Sales Price</div>
+                      <div className="subhead">Sales Count</div>
+                      <div className="subhead">Sales Unit</div>
+                      <div className="subhead">Sales Item Total</div>
+                      <div className="subhead">
                         <button
                           type="button"
                           className="btn-icon btn-add-row"
@@ -216,15 +245,15 @@ function fetchTax() {
                         >
                           +
                         </button>
-                      </th>
-                    </tr>
-                  </thead>
-                 <tbody>
+                      </div>
+                    </div>
+                  </div>
+                 <div>
   {salesRows.map((row, index) => (
-    <tr key={index}>
-      <td>{index + 1}</td>
+    <div className="inner-rep" key={index}>
+      <div className="index-rep">{index + 1}</div>
 
-      <td>
+      <div className="inner-rep-iner">
         <select
           name="stocks_id"
           className="table-input"
@@ -240,9 +269,9 @@ function fetchTax() {
             </option>
           ))}
         </select>
-      </td>
+      </div>
 
-      <td>
+      <div className="inner-rep-iner">
         <input
           type="text"
           className="table-input"
@@ -250,9 +279,9 @@ function fetchTax() {
           value={row.sales_amount ?? ""}
           onChange={(e) => handleRowChange(index, "sales_amount", e.target.value)}
         />
-      </td>
+      </div>
 
-      <td>
+      <div className="inner-rep-iner" >
         <input
           type="text"
            placeholder="Enter"
@@ -260,9 +289,9 @@ function fetchTax() {
           value={row.sales_count ?? ""}
           onChange={(e) => handleRowChange(index, "sales_count", e.target.value)}
         />
-      </td>
+      </div>
 
-      <td>
+      <div className="inner-rep-iner" >
         <input
           type="text"
            placeholder="Enter"
@@ -270,9 +299,9 @@ function fetchTax() {
           value={row.sales_item_type ?? ""}
           onChange={(e) => handleRowChange(index, "sales_item_type", e.target.value)}
         />
-      </td>
+      </div>
 
-      <td>
+      <div className="inner-rep-iner" >
         <input
           type="text"
            placeholder="Enter"
@@ -280,22 +309,32 @@ function fetchTax() {
           value={row.sales_total ?? ""}
           onChange={(e) => handleRowChange(index, "sales_total", e.target.value)}
         />
-      </td>
-      <td><a className="m-delete" onClick={(e) =>DeleteRow(index)} >Delete</a></td>
+      </div>
+      <div className="inner-rep-iner"><a className="m-delete" onClick={(e) =>DeleteRow(index)} >Delete</a></div>
+      <div className="inner-rep-iner">
+                        <button
+                          type="button"
+                          className="btn-icon btn-add-row"
+                            onClick={addRow}
+                          title="Add row"
+                        >
+                          +
+                        </button></div>
 
-    </tr>
+
+    </div>
   ))}
-</tbody>
+</div>
 
-                  </table>
+                  </div>
 
 
               </div>
                
 
-                <button className="btn-submit"  > Submit  </button>
+                <button className="btn-submit table-input" onClick={SubmitModal} > Submit  </button>
               
-              <button className="btn-cancel" onClick={cancelModal} >  Cancel  </button>
+              <button className="btn-cancel-sales" onClick={cancelModal} >  Cancel  </button>
 
             </div>
             </div>

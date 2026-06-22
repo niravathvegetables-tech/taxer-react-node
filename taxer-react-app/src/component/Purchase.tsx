@@ -316,6 +316,7 @@ function fetchTax() {
 
                 <label>Company Id</label>
               <input
+              className="table-input"
                 name="company_id"
                 value={formData.company_id}
                 readOnly

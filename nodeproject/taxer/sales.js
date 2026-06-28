@@ -60,35 +60,57 @@ function handleInsertsalesRequest(req, res) {
 
 
 function insertSeles(data, callback) {
+
+
+// const querytr = `
+//     INSERT INTO taxer_transaction 
+//     (company_id, transactionamount, tax, Total, date)
+//     VALUES (?, ?, ?, ?, ?)
+//   `;
+  
+// db.query(
+//     querytr,
+//     [data.companyid,data.stocks_price, data.stocks_total,data.stocks_image,data.stocks_unit,data.stocks_id],
+//     (err, result) => {
+//       if (err) return callback(err);
+//       callback(null, result);
+//     }
+//   );
+
   const query = `
     INSERT INTO taxer_sales 
     (transaction_id, stocks_id, sales_amount, sales_count, sales_item_type, sales_total, date)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
+  // ✅ Filter out incomplete rows (like row 1 with null stocks_id)
+  const validRows = data.sales.filter(row => row.stocks_id !== null && row.stocks_id !== undefined);
+
+  if (validRows.length === 0) {
+    return callback(new Error("No valid sales rows to insert"));
+  }
+
   let completed = 0;
   let hasError = false;
 
-  data.rows.forEach(row => {
+  validRows.forEach(row => {
     db.query(query, [
-      data.company_id,   // assuming company_id maps to transaction_id
-      row.stocks_id,
-      row.sales_amount,
-      row.sales_count,
-      row.sales_item_type,
-      row.sales_total,
-      data.date
+      data.companyid,         // ✅ transaction_id
+      row.stocks_id,          // ✅ was data.sales.stocks_id
+      row.sales_amount,       // ✅ was data.sales.sales_amount
+      row.sales_count,        // ✅ was data.sales.sales_count
+      row.sales_item_type,    // ✅ was data.sales.sales_item_type
+      row.sales_total,        // ✅ was data.sales.sales_total
+      data.date               // ✅
     ], (err, result) => {
-      if (hasError) return; // stop if already failed
+      if (hasError) return;
       if (err) {
         hasError = true;
         return callback(err);
       }
       completed++;
-      if (completed === data.rows.length) {
-
-         updateamountadd(row.sales_total, data.company_id);
-        
+      if (completed === validRows.length) {  // ✅ was data.rows.length
+        updateamountadd(row.sales_total, data.companyid);  // ✅ was data.company_id
         callback(null, { insertId: result.insertId });
       }
     });

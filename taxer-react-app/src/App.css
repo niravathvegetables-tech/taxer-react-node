@@ -1,4 +1,22 @@
 
+.sales-header,
+.sales-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr; /* Item | Price | Number | Total */
+  gap: 10px;
+  padding: 8px;
+  align-items: center;
+}
+
+.salesvessel{
+
+  height: 227px;
+  width: 350px;
+    overflow-x: scroll;
+     overflow-y: scroll;
+    position: relative;
+    display: block;
+}
 .sltx{
 
   margin-left:-4px !important;
@@ -32,7 +50,7 @@
 .sales-table-wrapper{
 
   position: relative;
-  width: 405px;
+  width: 811px;
   overflow-y: auto;
   height: 250px;
 }

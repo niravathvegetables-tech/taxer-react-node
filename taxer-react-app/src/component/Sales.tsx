@@ -49,11 +49,24 @@ interface salesRows{
 
 
 
+   interface Salesdata{
+
+    stocks_id:number | null;
+    sales_amount:string | null;
+    sales_count:string | null;
+    sales_id: number; 
+    sales_item_type:string | null;
+    sales_total:string | null;
+    date:string | null;
+    transaction_id:number; 
+
+  }
 
 
 
 const Sales: React.FC<SalesProps> = ({companyid,taxidee,taxarray,stocks}) => {
 
+const [salesdata, setSalesdata] = useState<Salesdata[]>([]);
 
   const [salesRows, setsalesRows] = useState<salesRows[]>([]); 
 
@@ -133,7 +146,7 @@ let data = {};
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-
+    setsalesRows([]);
 
     } catch (err) {
     console.error("Error submitting purchase:", err);
@@ -161,6 +174,8 @@ const DeleteRow = (index: number) => {
   useEffect(() => {
   fetchTax(); 
 
+  fetchsales();
+
 }, []);
 
 
@@ -176,11 +191,71 @@ function fetchTax() {
     });
 }
 
+ function fetchsales() {
+
+  fetch(url + "getsales")
+    .then((res) => res.json())
+    .then((data: Salesdata[]) => {
+
+       setSalesdata(data.length > 0 ? data : []);
+      
+      console.log("getsales data:", data);
+    })
+    .catch(() => {
+      // handle error
+    });
+}
+   
   return (
     <div className="contra-container">
       <h1>Sales</h1>
       <p>This is the Sales.</p>
        <a className="default-btn" onClick={handleShowModal}>Add Sales</a>
+
+
+     {salesdata && (
+  <div className="salesvessel">
+    <div className="sales-header">
+      <div className="sales-header-item">Item</div>
+      <div className="sales-header-amount">Price</div>
+      <div className="sales-header-count">Number</div>
+
+      <div className="sales-header-total">Total</div>
+    </div>
+
+    {salesdata.map((sl, k) => (
+      <div className="sales-row" key={k}>
+        <div className="sales-body-item">
+          {stocks
+            .filter(sf => Number(sf.stocks_id) === sl.stocks_id) // condition
+            .map((sf, i) => (
+              <div key={i}>
+                {sf.stocks_name}
+              </div>
+            ))
+          }
+        </div>
+
+        <div className="sales-body-amount">
+          {sl.sales_amount}
+        </div>
+
+        <div className="sales-body-count">
+          {sl.sales_count}
+        </div>
+
+        <div className="sales-body-total">
+          {sl.sales_total}
+        </div>
+
+
+      </div>
+    ))}
+  </div>
+)}
+
+
+
 
        {showModal &&(
 

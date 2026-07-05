@@ -99,6 +99,7 @@ function updateCompany(data, callback) {
 }
 
 function getcompanydetails(res) { // ✅ receives res
+
   db.query("SELECT * FROM taxer_company", (err, rows) => {
     if (err) {
       res.statusCode = 500;
@@ -108,6 +109,7 @@ function getcompanydetails(res) { // ✅ receives res
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify(rows));
   });
+  
 }
 
 function handleCompanyRequest(req, res) {

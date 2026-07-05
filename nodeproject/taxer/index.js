@@ -233,6 +233,45 @@ const server = http.createServer((req, res) => {
 
       handleDeletesalesRequest(req, res);
 
+      } else if (req.method === "POST" && req.url === "/checklogin") {
+
+
+        
+
+        let body = "";
+  req.on("data", chunk => { body += chunk.toString(); });
+
+
+
+         req.on("end", async () => {  
+
+              try {
+                 const data = JSON.parse(body);
+
+                 if(data.username=="admin" && data.password=="password"){
+
+                  res.setHeader("Content-Type", "application/json");
+                  res.end(JSON.stringify({ success: true  }));
+
+                 }else{
+
+                  res.statusCode = 400;
+            res.end(JSON.stringify({ error: "Wrong Credentials" }));
+
+                 }
+
+
+                } catch (err) {
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: err.message }));
+          }
+
+         });
+
+
+
+
+
   } else {
 
     res.statusCode = 404;

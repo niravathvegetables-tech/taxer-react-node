@@ -218,6 +218,10 @@ function fetchStock() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+      
+
+
   };
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -243,7 +247,7 @@ function fetchStock() {
     stocks_price: stk.stocks_price,
     stocks_total: stk.stocks_total,
     stocks_unit: stk.stocks_unit,
-    stocks_image: url+'/uploads/'+stk.stocks_image, // existing image path
+    stocks_image: url+'uploads/'+stk.stocks_image, // existing image path
     file: undefined                 // no new file yet
   });                 // no new file yet
   

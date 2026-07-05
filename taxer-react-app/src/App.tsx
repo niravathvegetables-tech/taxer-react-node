@@ -10,6 +10,9 @@ import Purchase from './component/Purchase';
 import Sales from './component/Sales';
 import Stock from './component/Stock';
 import Tax from './component/Tax';
+import Cookies from "js-cookie";
+
+import Login from './Login';
 
     import SVG from './component/Svg';
 
@@ -22,6 +25,12 @@ interface FormData {
   companyID: string;
   companyTax:number;
   
+}
+
+interface logs{
+  username:string,
+  password:string
+
 }
 
 interface Company {
@@ -68,6 +77,7 @@ const App: React.FC = () => {
     companyTax:0
      
   });
+ const [logs, setLogs] = useState<logs[]>([]);
 
   const [company, setCompany] = useState<Company[]>([]);
 
@@ -110,12 +120,51 @@ const [stock, setStock] = useState<StockItem[]>([]);
      
 
 useEffect(() => {
-  fetchCompany();
 
+  fetchCompany();
   fetchTax();
 fetchStock();
+
+
+const username = Cookies.get("username");
+const password = Cookies.get("password");
+
+
+ setLogs(prev => [...prev, { username, password }]);
+
+
 }, []); 
 
+
+const Setterlogs = (username: string, password: string) => {
+  if (username.trim() === '' || password.trim() === '') {
+    // optionally show an error message here
+    return;
+  }
+  
+  // Example: validate against backend
+  fetch(url + "checklogin", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        setLogs(prev => [...prev, { username, password }]);
+
+        Cookies.set("username", username, { expires: 1, secure: true, sameSite: "strict" });
+      Cookies.set("password", password, { expires: 1, secure: true, sameSite: "strict" });
+
+        
+      } else {
+        // show "invalid credentials" message
+      }
+    })
+    .catch(() => {
+      // handle error
+    });
+};
 
 function fetchStock() {
   fetch(url + "getstock")
@@ -292,7 +341,7 @@ console.log("logs++>"+formData);
     }
 
 
-      {showinfo ? (
+      {logs.length === 0 ? <Login setlogs={Setterlogs} /> : (showinfo ? (
 
 
         <div className="modal-overlay">
@@ -385,7 +434,7 @@ console.log("logs++>"+formData);
           />
         </div>
          <button className="btn-cancel" onClick={cancelModal} >Cancel</button>
-      </div> </div></div> ):( <p>   </p> )}
+      </div> </div></div>  ):( <p>   </p> ) ) }
 
 
 
@@ -435,3 +484,5 @@ console.log("logs++>"+formData);
 };
 
 export default App;
+
+

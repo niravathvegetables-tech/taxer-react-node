@@ -1,4 +1,11 @@
 
+
+  .outeermenu {
+    list-style: none;
+    border: blue solid;
+    width: 188px;
+}
+
 .sales-header,
 .sales-row {
   display: grid;

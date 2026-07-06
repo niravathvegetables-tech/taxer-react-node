@@ -31,7 +31,9 @@ interface FormData {
 const Woo: React.FC = () => {
 
 
-    const [stock, setStock] = useState<Stock[]>([]);
+   const [stock, setStock] = useState<Stock[]>([]);
+
+    const [cart, setCart] = useState<Stock[]>([]);
 
 
 useEffect(() => {
@@ -54,6 +56,27 @@ useEffect(() => {
 
 }
 
+const Buy = (stk) => {
+  setCart((prev) => {
+    const updated = [...prev, stk];
+    console.log(updated); // logs the new array
+    return updated;
+  });
+};
+
+
+
+const Remove = (stk) => {
+  setCart((prev) => {
+    const updated = prev.filter(item => item !== stk);
+    console.log(updated);
+    return updated;
+  });
+};
+
+
+
+
 
     return (
 
@@ -72,8 +95,8 @@ useEffect(() => {
               <th>Stock Amount</th>
               <th>Stock Unit</th>  
               <th>Image</th>    
-              <th>Edit</th>        
-              <th>Delete</th>
+                    
+              <th>Buy</th>
             </tr>
           </thead>
           <tbody>
@@ -100,8 +123,8 @@ let urlimg = url+'uploads/' + imgFile;
           ? <img src={urlimg} width="250px" height="150px" alt="stock" />
           : "No image"
         }</td>
-                  <td><a onClick={() => Edit(stk)}>Edit</a></td>
-                  <td><a onClick={() => Delete(stk)}>Delete</a></td>
+                  <td><a onClick={() => Buy(stk)}>Buy</a></td>
+                  
                    </tr>
 
                 )
@@ -125,7 +148,66 @@ let urlimg = url+'uploads/' + imgFile;
 
 
 
+          {cart.length >=1 && (
+        <div className="resulttable">
+          <h2>My cart</h2>
+         <table>
+          <thead>
+            <tr>
+              <th>Stock Name</th>
+              <th>Stock Amount</th>
+              <th>Stock Unit</th>  
+              <th>Image</th>    
+                    
+              <th>Buy</th>
+            </tr>
+          </thead>
+          <tbody>
 
+
+
+          {cart.map((stk)=>{
+
+
+            
+
+            let imgFile = stk.stocks_image?.replace(/^uploads[\\/]/, "");
+let urlimg = url+'uploads/' + imgFile;
+
+ 
+
+              return(
+
+                   <tr>
+                   <td>{stk.stocks_name}</td>
+                   <td>{stk.stocks_price}</td>
+                   <td>{stk.stocks_total}-{stk.stocks_unit}</td>
+                   <td>{imgFile
+          ? <img src={urlimg} width="250px" height="150px" alt="stock" />
+          : "No image"
+        }</td>
+                  <td><a onClick={() => Remove(stk)}>Remove</a></td>
+                  
+                   </tr>
+
+                )
+
+
+
+
+
+          }
+
+
+            )}
+
+
+
+          </tbody>
+          </table>
+
+          </div>
+          )}
 
 
         </div>

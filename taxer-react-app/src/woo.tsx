@@ -56,13 +56,44 @@ useEffect(() => {
 
 }
 
-const Buy = (stk) => {
+const Buy = (stk:Stock[]) => {
+
+  if (Array.isArray(stk)) {
+    stk.map((m: any) => {
+      m.stocks_total = 1;
+      return m;
+    });
+  } else {
+    // handle single object case
+    stk.stocks_total = 1;
+  }
+
   setCart((prev) => {
+
+     const exists = prev.find(item => item.stocks_id === stk.stocks_id);
+
+       if (exists) {
+
+
+        return prev.map(item =>
+        item.stocks_id === stk.stocks_id
+          ? { ...item, stocks_total: item.stocks_total + 1 }
+          : item
+      );
+
+
+       }else{
+
     const updated = [...prev, stk];
     console.log(updated); // logs the new array
     return updated;
+  }
+
+  
   });
+
 };
+
 
 
 
@@ -74,7 +105,34 @@ const Remove = (stk) => {
   });
 };
 
+const Proceed=async()=>{
 
+  let p= "sales" ;
+
+    let endpoint = pyurl + p;
+  
+     try{
+
+        const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cart)
+        });
+
+      const result = await response.json().then((data) => {
+      //setmessage("Success");
+
+        //setCart([]);
+
+
+      return data;
+      });
+
+     }catch(err){
+
+
+    }
+}
 
 
 
@@ -198,10 +256,12 @@ let urlimg = url+'uploads/' + imgFile;
 
           }
 
+           
+
 
             )}
 
-
+           {cart.length >= 1 ? <a className="proceed" onClick={Proceed}>Proceed</a> : null}
 
           </tbody>
           </table>

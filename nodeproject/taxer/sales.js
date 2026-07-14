@@ -3,6 +3,8 @@ const db = require("./db");
 
   const { updateamountadd,updateamountreduce } = require("./company");
 
+   const { externalupdate } = require("./stock");
+
 function getsales(res){
 
 db.query("SELECT * FROM taxer_sales", (err, rows) => {
@@ -94,6 +96,9 @@ function insertSeles(data, callback) {
   let hasError = false;
 
   validRows.forEach(row => {
+
+     
+
     db.query(query, [
       data.companyid,         // ✅ transaction_id
       row.stocks_id,          // ✅ was data.sales.stocks_id
@@ -112,8 +117,14 @@ function insertSeles(data, callback) {
       if (completed === validRows.length) {  // ✅ was data.rows.length
         updateamountadd(row.sales_total, data.companyid);  // ✅ was data.company_id
         callback(null, { insertId: result.insertId });
+        
       }
     });
+
+    console.log("row-stock-idee"+row.stocks_id);
+
+      externalupdate(row);
+
   });
 }
 

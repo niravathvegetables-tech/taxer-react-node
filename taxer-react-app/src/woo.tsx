@@ -16,16 +16,15 @@ interface FormData {
 }
 
 
-  interface Stock{
+  interface Stock {
+  stocks_id: string;
+  stocks_name: string;
+  stocks_price: string;
+  stocks_total: number;   // should be number
+  stocks_unit: string;
+  stocks_image: string;
+}
 
-    stocks_id : string,
-    stocks_name : string,
-    stocks_price : string,
-    stocks_total : string,
-    stocks_unit : string,
-    stocks_image : string
-
-  }
 
 
 const Woo: React.FC = () => {
@@ -56,7 +55,8 @@ useEffect(() => {
 
 }
 
-const Buy = (stk:Stock[]) => {
+const Buy = (stk: Stock) => {
+
 
   if (Array.isArray(stk)) {
     stk.map((m: any) => {
@@ -97,13 +97,10 @@ const Buy = (stk:Stock[]) => {
 
 
 
-const Remove = (stk) => {
-  setCart((prev) => {
-    const updated = prev.filter(item => item !== stk);
-    console.log(updated);
-    return updated;
-  });
+const Remove = (stk: Stock) => {
+  setCart((prev) => prev.filter(item => item.stocks_id !== stk.stocks_id));
 };
+
 
 const Proceed=async()=>{
 

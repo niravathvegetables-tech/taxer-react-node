@@ -116,14 +116,19 @@ function insertSeles(data, callback) {
       completed++;
       if (completed === validRows.length) {  // ✅ was data.rows.length
         updateamountadd(row.sales_total, data.companyid);  // ✅ was data.company_id
+
+          externalupdate(row);
+          
         callback(null, { insertId: result.insertId });
+
+
         
       }
     });
 
     console.log("row-stock-idee"+row.stocks_id);
 
-      externalupdate(row);
+    
 
   });
 }

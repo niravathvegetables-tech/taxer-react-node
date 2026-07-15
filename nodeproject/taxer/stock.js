@@ -113,6 +113,41 @@ function externalupdate(input) {
 
 
 
+function externalupdatepurchase(input) {
+  const stocks_id = input.stocks_id;  // correct property
+
+  console.log("stocks_id ==> " + stocks_id);
+
+  const query = "SELECT * FROM taxer_stocks WHERE stocks_id = ?";
+
+  db.query(query, [stocks_id], (err, rows) => {
+    if (err) {
+      console.error("DB Error in externalupdate:", err);
+      return;
+    }
+
+    if (rows.length === 0) {
+      console.error("No stock found for id:", stocks_id);
+      return;
+    }
+
+    let current_stock = parseInt(rows[0].stocks_total, 10);
+    let new_stock = current_stock + parseInt(input.purchase_count, 10);
+
+    console.log("Updated stock count ==> ", new_stock);
+
+    // ✅ Update the stock in DB
+    const updateQuery = "UPDATE taxer_stocks SET stocks_total = ? WHERE stocks_id = ?";
+    db.query(updateQuery, [new_stock, stocks_id], (updateErr, result) => {
+      if (updateErr) {
+        console.error("Error updating stock:", updateErr);
+        return;
+      }
+      console.log("Stock updated successfully for id:", stocks_id);
+    });
+    
+  });
+}
 
  
 function updateStock(data, callback) {
@@ -233,4 +268,4 @@ function DeleteStockRequest(req, res){
 }
 
  
-module.exports = { handleStockRequest,getstockdetailsid,DeleteStockRequest,externalupdate };
+module.exports = { handleStockRequest,getstockdetailsid,DeleteStockRequest,externalupdate,externalupdatepurchase };

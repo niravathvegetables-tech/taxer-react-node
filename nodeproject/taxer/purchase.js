@@ -2,7 +2,7 @@ const db = require("./db");
  const path = require("path");
 
   const { updateamountadd,updateamountreduce } = require("./company");
-
+  const { externalupdatepurchase } = require("./stock");
 
 function getpurchase(res){
 
@@ -84,10 +84,14 @@ function insertPurchase(data, callback) {
       if (completed === data.rows.length) {
 
          updateamountreduce(row.purchase_total, data.company_id);
+
+          externalupdatepurchase(row);
         
         callback(null, { insertId: result.insertId });
       }
     });
+
+    
   });
 }
 
